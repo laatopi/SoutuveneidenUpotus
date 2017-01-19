@@ -1,1 +1,2 @@
 # SoutuveneidenUpotus
+Projektin ensimmäinen vaihe.
