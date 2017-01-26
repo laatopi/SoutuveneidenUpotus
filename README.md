@@ -1,4 +1,4 @@
 # SoutuveneidenUpotus
-Projektin on yksinkertainen laivanupotus peli tekoälyä vastaan.
 ###### Dokumentaatio
-[aiheen kuvaus](dokumentaatio/tuntikirjanpito.md)
+[Aihemäärittelyt](dokumentaatio/aihemaarittely.md)
+[Tuntikirjanpito](dokumentaatio/tuntikirjanpito.md)
