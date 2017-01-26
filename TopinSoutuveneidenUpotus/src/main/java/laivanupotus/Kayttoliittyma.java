@@ -17,7 +17,7 @@ public class Kayttoliittyma {
 
     Scanner lukija;
     ArrayList<String> numerot;
-    Ruudukko OmaRuudukko;
+    Ruudukko omaRuudukko;
     Ruudukko tietokoneenRuudukko;
 
     public Kayttoliittyma() {
@@ -36,14 +36,14 @@ public class Kayttoliittyma {
         return ktoN;
     }
 
-    public void Kaynnista() { //käynnistää pelin
-        this.OmaRuudukko = new Ruudukko(true);
+    public void kaynnista() { //käynnistää pelin
+        this.omaRuudukko = new Ruudukko(true);
         this.tietokoneenRuudukko = new Ruudukko(false);
 
         System.out.println("Aseta laivat!\n");
-        System.out.println(OmaRuudukko.toString());
+        System.out.println(omaRuudukko.toString());
         asetaLaivat();
-        OmaRuudukko.toString();
+        omaRuudukko.toString();
 
     }
 
@@ -77,7 +77,7 @@ public class Kayttoliittyma {
             System.out.println("\nLaiva ei mahdu, kokeile uusilla koordinaateilla!\n");
         }
 
-        OmaRuudukko.luoLaiva(leveys, pituus, pysty, i);
+        omaRuudukko.luoLaiva(leveys, pituus, pysty, i);
         System.out.println("\nLaiva asetettu!");
     }
 
@@ -100,7 +100,7 @@ public class Kayttoliittyma {
             return false;
         }
 
-        if (OmaRuudukko.ruuduissaJoLaiva(leveys, pituus, laivanpituus, suunta) == true) {
+        if (omaRuudukko.ruuduissaJoLaiva(leveys, pituus, laivanpituus, suunta) == true) {
             System.out.println("\nHups, laivahan menisi päällekkäin toisen laivan kanssa! Eihän se sovi.\n");
             return false;
         }

@@ -14,7 +14,7 @@ import java.util.Scanner;
 public class Main {
     public static void main(String[] args) {
         Kayttoliittyma k = new Kayttoliittyma();
-        k.Kaynnista();
+        k.kaynnista();
         
         
     }

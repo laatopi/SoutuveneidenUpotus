@@ -1,3 +1,4 @@
 # SoutuveneidenUpotus
-Projektin ensimmäinen vaihe.
-Muokkaus!
+Projektin on yksinkertainen laivanupotus peli tekoälyä vastaan.
+###### Dokumentaatio
+[aiheen kuvaus](dokumentaatio/tuntikirjanpito.md)
