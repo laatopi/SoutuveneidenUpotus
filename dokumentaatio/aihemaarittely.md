@@ -7,7 +7,7 @@
 - Pystyy pommittamaan vihollisen laivoja.
 - Näkee jos ruudussa johon on pommitettu on vihollisen laiva.
 - Näkee myös oman ruudukkonsa tilanteen.
-![Alt text](/kaavio.jpeg)
+![Alt text](SoutuveneidenUpotus/dokumentaatio/kaavio.jpeg)
 
 
 
