@@ -5,12 +5,17 @@
  */
 package laivanupotus;
 
+import java.util.Scanner;
+
 /**
  *
  * @author laatopi
  */
 public class Main {
     public static void main(String[] args) {
-        System.out.println("d");
+        Kayttoliittyma k = new Kayttoliittyma();
+        k.Kaynnista();
+        
+        
     }
 }
