@@ -5,9 +5,9 @@
  */
 package laivanupotus;
 
-import java.util.ArrayList;
 import java.util.InputMismatchException;
 import java.util.Scanner;
+import java.util.Random;
 
 /**
  *
@@ -16,44 +16,40 @@ import java.util.Scanner;
 public class Kayttoliittyma {
 
     Scanner lukija;
-    ArrayList<String> numerot;
     Ruudukko omaRuudukko;
     Ruudukko tietokoneenRuudukko;
+    Random random;
 
     public Kayttoliittyma() {
-        this.numerot = lista();
+        this.random = new Random();
         this.lukija = new Scanner(System.in);
-    }
-
-    public ArrayList<String> lista() {
-        ArrayList<String> ktoN = new ArrayList<>();
-
-        char a = 'A';
-        for (int i = 0; i < 8; i++) {
-            ktoN.add(i, "" + a);
-            a++;
-        }
-        return ktoN;
+        this.omaRuudukko = new Ruudukko(true);
+        this.tietokoneenRuudukko = new Ruudukko(false);
     }
 
     public void kaynnista() { //käynnistää pelin
-        this.omaRuudukko = new Ruudukko(true);
-        this.tietokoneenRuudukko = new Ruudukko(false);
 
         System.out.println("Aseta laivat!\n");
-        System.out.println(omaRuudukko.toString());
+        System.out.println(this.omaRuudukko.toString());
         asetaLaivat();
-        omaRuudukko.toString();
-
+        peliKayntiin();
     }
 
     private void asetaLaivat() { //asettaa laivatnumerot
-        asetalaiva(2);
-        asetalaiva(2);
+        asetaLaiva(2);
+        asetaLaiva(2);
+        asetaLaiva(3);
+        asetaLaiva(3);
+        asetaLaiva(4);
+        Logiikka.asetaTietokoneenLaiva(2, this);
+        Logiikka.asetaTietokoneenLaiva(2, this);
+        Logiikka.asetaTietokoneenLaiva(3, this);
+        Logiikka.asetaTietokoneenLaiva(3, this);
+        Logiikka.asetaTietokoneenLaiva(4, this);
 
     }
 
-    private void asetalaiva(int i) { //asettaa laivat. yksittäiset laivat pitää olla vierekkäin.
+    private void asetaLaiva(int i) { //asettaa laivat. yksittäiset laivat pitää olla vierekkäin.
         System.out.println("Valitse laivan pään koordinaatit " + i + " pituiselle laivalle.\n");
 
         int leveys = 0;
@@ -68,10 +64,10 @@ public class Kayttoliittyma {
 
         while (true) {
 
-            leveys = valitseLeveysKoordinaatti();
             pituus = valitsePituusKoordinaatti();
+            leveys = valitseLeveysKoordinaatti();
 
-            if (tarkistaMahtuukoLaiva(leveys, pituus, pysty, i) == true) { //katsoo mahtuuko laiva koordinaatistoon
+            if (Logiikka.tarkistaMahtuukoLaiva(leveys, pituus, pysty, i, omaRuudukko) == true) { //katsoo mahtuuko laiva koordinaatistoon
                 break;                                                       //tai meneekö se jonkun toisen laivan päälle.
             }
             System.out.println("\nLaiva ei mahdu, kokeile uusilla koordinaateilla!\n");
@@ -79,32 +75,7 @@ public class Kayttoliittyma {
 
         omaRuudukko.luoLaiva(leveys, pituus, pysty, i);
         System.out.println("\nLaiva asetettu!");
-    }
-
-    private int haeKordinaatti(String leveys) {
-        for (int i = 0; i < 8; i++) {
-            if (leveys.equals(numerot.get(i)) || leveys.equals(numerot.get(i).toLowerCase())) {
-                return i + 1;
-            }
-        }
-        return 0;
-    }
-
-    private boolean tarkistaMahtuukoLaiva(int leveys, int pituus, boolean suunta, int laivanpituus) {
-        
-        if (suunta == true) {
-            if (pituus + (laivanpituus - 1) > 8) {
-                return false;
-            }
-        } else if (leveys + (laivanpituus - 1) > 8) {
-            return false;
-        }
-
-        if (omaRuudukko.ruuduissaJoLaiva(leveys, pituus, laivanpituus, suunta) == true) {
-            System.out.println("\nHups, laivahan menisi päällekkäin toisen laivan kanssa! Eihän se sovi.\n");
-            return false;
-        }
-        return true;
+        System.out.println(omaRuudukko.toString());
     }
 
     public int valitseLeveysKoordinaatti() {
@@ -112,7 +83,7 @@ public class Kayttoliittyma {
         while (true) { // valitaan ensin leveyssuuntainen
             System.out.print("Leveys (A-H): ");
             String leveys = lukija.nextLine();
-            int leveys2 = haeKordinaatti(leveys);
+            int leveys2 = Logiikka.haeKordinaatti(leveys);
             if (leveys2 != 0) {
                 return leveys2;
             }
@@ -133,6 +104,51 @@ public class Kayttoliittyma {
             if (pituus > 0 && pituus < 9) {
                 return pituus;
             }
+        }
+    }
+
+    private void peliKayntiin() {
+        while (true) {
+            System.out.println("---OMA RUUDUKKO---");
+            System.out.println(omaRuudukko);
+            System.out.println("---TIETOKONEEN RUUDUKKO---");
+            System.out.println(tietokoneenRuudukko);
+
+            ammu();
+
+            if (tietokoneenRuudukko.onkoKaikkiLaivatUponneet() == true) {
+                System.out.println("Jihuu! Voitto!!");
+                break;
+            }
+
+            System.out.println("JEA");
+            omaRuudukko.tietokoneAmmuLaivaa(random.nextInt(7) + 1, random.nextInt(7) + 1);
+
+            if (omaRuudukko.onkoKaikkiLaivatUponneet()) {
+                System.out.println("Voi EI! Häviö :(");
+                break;
+            }
+
+        }
+    }
+
+    private void ammu() {
+        while (true) {
+            System.out.print("Valitse ammuttavat koordinaatit(Mallilla A-8): ");
+            String koordinaatit = lukija.nextLine();
+
+            int pituus = 0;
+            int leveys = Logiikka.haeKordinaatti("" + koordinaatit.charAt(0));
+            try {
+                pituus = Integer.parseInt("" + koordinaatit.charAt(2));
+            } catch (NumberFormatException nfe) {
+            }
+
+            if (pituus > 0 && pituus < 9 && leveys != 0) {
+                tietokoneenRuudukko.ammuLaivaa(leveys - 1, pituus - 1);
+                break;
+            }
+
         }
     }
 

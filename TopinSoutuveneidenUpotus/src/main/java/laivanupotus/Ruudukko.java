@@ -5,6 +5,8 @@
  */
 package laivanupotus;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author laatopi
@@ -13,8 +15,12 @@ public class Ruudukko {
 
     public Ruutu[][] ruudukko;
     public boolean oma;
+    public ArrayList<LaivaLaskuri> laskurit;
 
     public Ruudukko(boolean oma) { //luo ruudukon
+
+        laskurit = new ArrayList<>();
+
         this.ruudukko = new Ruutu[8][8]; //ensimmäinen Y akseli, toinen X akseli
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
@@ -23,6 +29,8 @@ public class Ruudukko {
         }
         this.oma = oma;
     }
+
+    
 
     @Override
     public String toString() { //Printtaa ruuudkon ulkoasun.
@@ -49,15 +57,18 @@ public class Ruudukko {
     }
 
     public void luoLaiva(int leveys, int pituus, boolean pysty, int laivanKoko) {
+        LaivaLaskuri laskuri = new LaivaLaskuri();
+        laskurit.add(laskuri);
         for (int i = 0; i < laivanKoko; i++) {
             ruudukko[pituus - 1][leveys - 1].asetaLaiva();
+            ruudukko[pituus - 1][leveys - 1].asetaLaskuri(laskuri);
+            ruudukko[pituus - 1][leveys - 1].laskuri.kasvata();
             if (pysty) {
                 pituus++;
             } else {
                 leveys++;
             }
         }
-
     }
 
     public boolean ruuduissaJoLaiva(int leveys, int pituus, int laivanKoko, boolean pysty) {
@@ -72,6 +83,31 @@ public class Ruudukko {
             }
         }
         return false;
+    }
+
+    public void ammuLaivaa(int leveys, int pituus) {
+        ruudukko[pituus][leveys].ampuminen();
+        if (ruudukko[pituus][leveys].onkoRuudussaLaiva() == true) {
+            ruudukko[pituus][leveys].laskuri.vahenna();
+        }
+    }
+
+    void tietokoneAmmuLaivaa(int leveys, int pituus) { //TODO ----
+        ruudukko[pituus][leveys].ampuminen();
+        if (ruudukko[pituus][leveys].onkoRuudussaLaiva() == true) {
+            ruudukko[pituus][leveys].laskuri.vahenna();
+        }
+
+        //todo fiksu ampuminen eikä satunnaista hömppää
+    }
+
+    public boolean onkoKaikkiLaivatUponneet() {
+        for (LaivaLaskuri laskuri : laskurit) {
+            if (laskuri.arvo() > 0) {
+                return false;
+            }
+        }
+        return true;
     }
 
 }

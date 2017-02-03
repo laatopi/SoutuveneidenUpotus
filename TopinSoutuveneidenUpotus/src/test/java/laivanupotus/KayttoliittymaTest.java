@@ -1,4 +1,4 @@
-package laivanupotusTest;
+package laivanupotus;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -47,12 +47,7 @@ public class KayttoliittymaTest {
 
     @Test
     public void ListaToimii() {
-        ArrayList<String> lista = k.lista();
-        assertTrue(lista.get(0).equals("A"));
-        assertTrue(lista.get(2).equals("C"));
-        assertTrue(lista.get(4).equals("E"));
-        assertTrue(lista.get(6).equals("G"));
-        assertTrue(lista.get(7).equals("H"));
+        
     }
 
     @Test

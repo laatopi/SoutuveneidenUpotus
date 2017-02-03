@@ -1,4 +1,4 @@
-package laivanupotusTest;
+package laivanupotus;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -29,6 +29,7 @@ public class RuutuTest {
     @Test
     public void konstruktoriToimii() {
         assertTrue(ruutu != null);
+
     }
 
     @Test
@@ -44,11 +45,33 @@ public class RuutuTest {
         ruutu.asetaLaiva();
         assertTrue(ruutu.onkoRuudussaLaiva());
     }
-    
+
     @Test
-    public void onkoRuudussaLaivaToimii(){
+    public void onkoRuudussaLaivaToimii() {
         ruutu.asetaLaiva();
         assertTrue(ruutu.onkoRuudussaLaiva());
+    }
+
+    @Test
+    public void ampuminenToimiiIlmanLaivaa() {
+        assertTrue(ruutu.onkoAmmuttu() == false);
+        ruutu.ampuminen();
+        assertFalse(ruutu.onkoAmmuttu() == false);
+    }
+
+    @Test
+    public void ampuminenToimiiLaivalla() {
+        ruutu.asetaLaiva();
+        assertTrue(ruutu.onkoAmmuttu() == false);
+        ruutu.ampuminen();
+        assertFalse(ruutu.onkoAmmuttu() == false);
+    }
+
+    @Test
+    public void asetaLaskuriToimii() {
+        assertTrue(this.ruutu.palautaLaskuri() == null);
+        this.ruutu.asetaLaskuri(new LaivaLaskuri());
+        assertFalse(this.ruutu.palautaLaskuri() == null);
     }
 
     // TODO add test methods here.
