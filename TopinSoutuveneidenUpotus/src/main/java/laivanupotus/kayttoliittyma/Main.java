@@ -3,19 +3,18 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package laivanupotus;
+package laivanupotus.kayttoliittyma;
 
-import java.util.Scanner;
+import laivanupotus.grafiikka.GrafiikkaTest;
 
 /**
  *
  * @author laatopi
  */
 public class Main {
+    
     public static void main(String[] args) {
         Kayttoliittyma k = new Kayttoliittyma();
         k.kaynnista();
-        
-        
     }
 }

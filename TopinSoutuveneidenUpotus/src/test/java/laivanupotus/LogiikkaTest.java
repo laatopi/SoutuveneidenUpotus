@@ -5,6 +5,9 @@
  */
 package laivanupotus;
 
+import laivanupotus.kayttoliittyma.Kayttoliittyma;
+import laivanupotus.logiikka.Ruudukko;
+import laivanupotus.logiikka.Logiikka;
 import java.util.ArrayList;
 import org.junit.After;
 import org.junit.AfterClass;
@@ -49,8 +52,8 @@ public class LogiikkaTest {
     @Test
     public void asetaTietokoneenLaivaToimii() {
         Kayttoliittyma k = new Kayttoliittyma();
-        Logiikka.asetaTietokoneenLaiva(2, k);
-        Logiikka.asetaTietokoneenLaiva(2, k);
+        Logiikka.asetaTietokoneenLaiva(2, k.tietokoneenRuudukko);
+        Logiikka.asetaTietokoneenLaiva(2, k.tietokoneenRuudukko);
         assertTrue(k.tietokoneenRuudukko.onkoKaikkiLaivatUponneet() == false);
 
     }

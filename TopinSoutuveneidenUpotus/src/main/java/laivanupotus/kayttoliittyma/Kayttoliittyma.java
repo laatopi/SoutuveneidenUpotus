@@ -3,11 +3,16 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package laivanupotus;
+package laivanupotus.kayttoliittyma;
 
 import java.util.InputMismatchException;
 import java.util.Scanner;
 import java.util.Random;
+import laivanupotus.grafiikka.GrafiikkaTest;
+import laivanupotus.logiikka.Logiikka;
+import laivanupotus.logiikka.Logiikka;
+import laivanupotus.logiikka.Ruudukko;
+import laivanupotus.logiikka.Ruudukko;
 
 /**
  *
@@ -16,9 +21,13 @@ import java.util.Random;
 public class Kayttoliittyma {
 
     Scanner lukija;
-    Ruudukko omaRuudukko;
-    Ruudukko tietokoneenRuudukko;
+    public Ruudukko omaRuudukko;
+    public Ruudukko tietokoneenRuudukko;
     Random random;
+    GrafiikkaTest g;
+    public int pituusAsetaLaiva;
+    public int leveysAsetaLaiva;
+    public boolean asetusKaynnissa;
 
     public Kayttoliittyma() {
         this.random = new Random();
@@ -28,7 +37,8 @@ public class Kayttoliittyma {
     }
 
     public void kaynnista() { //käynnistää pelin
-
+        
+        this.g = new GrafiikkaTest(this);
         System.out.println("Aseta laivat!\n");
         System.out.println(this.omaRuudukko.toString());
         asetaLaivat();
@@ -41,39 +51,36 @@ public class Kayttoliittyma {
         asetaLaiva(3);
         asetaLaiva(3);
         asetaLaiva(4);
-        Logiikka.asetaTietokoneenLaiva(2, this);
-        Logiikka.asetaTietokoneenLaiva(2, this);
-        Logiikka.asetaTietokoneenLaiva(3, this);
-        Logiikka.asetaTietokoneenLaiva(3, this);
-        Logiikka.asetaTietokoneenLaiva(4, this);
+        Logiikka.asetaTietokoneenLaiva(2, this.tietokoneenRuudukko);
+        Logiikka.asetaTietokoneenLaiva(2, this.tietokoneenRuudukko);
+        Logiikka.asetaTietokoneenLaiva(3, this.tietokoneenRuudukko);
+        Logiikka.asetaTietokoneenLaiva(3, this.tietokoneenRuudukko);
+        Logiikka.asetaTietokoneenLaiva(4, this.tietokoneenRuudukko);
 
     }
 
     private void asetaLaiva(int i) { //asettaa laivat. yksittäiset laivat pitää olla vierekkäin.
         System.out.println("Valitse laivan pään koordinaatit " + i + " pituiselle laivalle.\n");
 
-        int leveys = 0;
-        int pituus = 0;
+        leveysAsetaLaiva = 8;
+        pituusAsetaLaiva = 8;
         boolean pysty = false;
 
-        System.out.print("Tuleeko laiva pysty vai vaakatasoon ? (p/l): ");
-        String suunta = lukija.nextLine();
-        if (suunta.equals("p")) {
-            pysty = true;
-        }
-
+//        System.out.print("Tuleeko laiva pysty vai vaakatasoon ? (p/l): ");
+//        String suunta = lukija.nextLine();
+//        if (suunta.equals("p")) {
+//            pysty = true;
+//        }
+        asetusKaynnissa = true;
         while (true) {
-
-            pituus = valitsePituusKoordinaatti();
-            leveys = valitseLeveysKoordinaatti();
-
-            if (Logiikka.tarkistaMahtuukoLaiva(leveys, pituus, pysty, i, omaRuudukko) == true) { //katsoo mahtuuko laiva koordinaatistoon
+            
+            if (Logiikka.tarkistaMahtuukoLaiva(leveysAsetaLaiva, pituusAsetaLaiva, pysty, i, omaRuudukko) == true) {
+                asetusKaynnissa = false;
                 break;                                                       //tai meneekö se jonkun toisen laivan päälle.
             }
-            System.out.println("\nLaiva ei mahdu, kokeile uusilla koordinaateilla!\n");
         }
 
-        omaRuudukko.luoLaiva(leveys, pituus, pysty, i);
+        omaRuudukko.luoLaiva(leveysAsetaLaiva, pituusAsetaLaiva, pysty, i);
         System.out.println("\nLaiva asetettu!");
         System.out.println(omaRuudukko.toString());
     }

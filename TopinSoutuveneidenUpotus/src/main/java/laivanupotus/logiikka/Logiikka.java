@@ -3,38 +3,44 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package laivanupotus;
+package laivanupotus.logiikka;
 
+import laivanupotus.kayttoliittyma.Kayttoliittyma;
 import java.util.ArrayList;
+import java.util.Random;
 
 /**
  *
  * @author laatopi
  */
 public class Logiikka {
+    
+    
 
 
     public static boolean tarkistaMahtuukoLaiva(int leveys, int pituus, boolean suunta, int laivanpituus, Ruudukko ruudukko) {
         if (suunta == true) {
-            if (pituus + (laivanpituus - 1) > 8) {
+            if (pituus + (laivanpituus - 1) > 7) {
                 return false;
             }
-        } else if (leveys + (laivanpituus - 1) > 8) {
+        } else if (leveys + (laivanpituus - 1) > 7) {
             return false;
         }
         if (ruudukko.ruuduissaJoLaiva(leveys, pituus, laivanpituus, suunta) == true) {
             return false;
         }
+        System.out.println("Novenaas");
         return true;
     }
 
-    public static void asetaTietokoneenLaiva(int i, Kayttoliittyma kayttoliittyma) {
+    public static void asetaTietokoneenLaiva(int i, Ruudukko ruudukko) {
+        Random random = new Random();
         while (true) {
-            int leveys = kayttoliittyma.random.nextInt(7) + 1;
-            int pituus = kayttoliittyma.random.nextInt(7) + 1;
-            boolean pysty = kayttoliittyma.random.nextBoolean();
-            if (Logiikka.tarkistaMahtuukoLaiva(leveys, pituus, pysty, pituus, kayttoliittyma.omaRuudukko) == true) {
-                kayttoliittyma.tietokoneenRuudukko.luoLaiva(leveys, pituus, pysty, i);
+            int leveys = random.nextInt(7) + 1;
+            int pituus = random.nextInt(7) + 1;
+            boolean pysty = random.nextBoolean();
+            if (Logiikka.tarkistaMahtuukoLaiva(leveys, pituus, pysty, pituus, ruudukko) == true) {
+                ruudukko.luoLaiva(leveys, pituus, pysty, i);
                 break;
             }
         }

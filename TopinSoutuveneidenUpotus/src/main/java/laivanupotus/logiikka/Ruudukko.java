@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package laivanupotus;
+package laivanupotus.logiikka;
 
 import java.util.ArrayList;
 
@@ -73,7 +73,7 @@ public class Ruudukko {
 
     public boolean ruuduissaJoLaiva(int leveys, int pituus, int laivanKoko, boolean pysty) {
         for (int i = 0; i < laivanKoko; i++) {
-            if (ruudukko[pituus - 1][leveys - 1].onkoRuudussaLaiva() == true) {
+            if (ruudukko[pituus][leveys].onkoRuudussaLaiva() == true) {
                 return true;
             }
             if (pysty) {
@@ -92,7 +92,7 @@ public class Ruudukko {
         }
     }
 
-    void tietokoneAmmuLaivaa(int leveys, int pituus) { //TODO ----
+    public void tietokoneAmmuLaivaa(int leveys, int pituus) { //TODO ----
         ruudukko[pituus][leveys].ampuminen();
         if (ruudukko[pituus][leveys].onkoRuudussaLaiva() == true) {
             ruudukko[pituus][leveys].laskuri.vahenna();

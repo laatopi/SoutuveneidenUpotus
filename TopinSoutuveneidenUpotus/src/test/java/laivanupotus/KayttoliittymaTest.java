@@ -8,7 +8,7 @@ package laivanupotus;
 
 import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
-import laivanupotus.Kayttoliittyma;
+import laivanupotus.kayttoliittyma.Kayttoliittyma;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;

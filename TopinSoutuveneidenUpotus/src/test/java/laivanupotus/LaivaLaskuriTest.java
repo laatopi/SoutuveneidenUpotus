@@ -5,7 +5,7 @@
  */
 package laivanupotus;
 
-import laivanupotus.*;
+import laivanupotus.logiikka.LaivaLaskuri;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
