@@ -73,6 +73,7 @@ public class Grafiikka {
             GridBagConstraints gbc = new GridBagConstraints();
 
             char ko = 'A';
+            //Hhfhdhf
 
             for (int y = 0; y < 10; y++) {
                 for (int x = 0; x < 19; x++) {
