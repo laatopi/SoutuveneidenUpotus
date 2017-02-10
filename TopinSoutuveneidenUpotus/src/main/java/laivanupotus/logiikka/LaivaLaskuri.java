@@ -6,8 +6,10 @@
 package laivanupotus.logiikka;
 
 /**
- *
+ * 
  * @author laatopi
+ * pieni apuluokka jolla pidetään laskua yksittäisen laivan tilasta. eli kun
+ * laiva on 0, niin laiva uppoaa.
  */
 public class LaivaLaskuri {
 

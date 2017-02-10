@@ -8,155 +8,106 @@ package laivanupotus.kayttoliittyma;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 import java.util.Random;
-import laivanupotus.grafiikka.GrafiikkaTest;
-import laivanupotus.logiikka.Logiikka;
-import laivanupotus.logiikka.Logiikka;
+import laivanupotus.grafiikka.Grafiikka;
 import laivanupotus.logiikka.Ruudukko;
 import laivanupotus.logiikka.Ruudukko;
 
 /**
  *
  * @author laatopi
+ * 
+ * luokka tarjoaa pelin etenemiseen liittyvat metodit ja toteuttaa ne oikeassa
+ * oikeassa järjestyksessä.
+ *
  */
 public class Kayttoliittyma {
 
-    Scanner lukija;
-    public Ruudukko omaRuudukko;
-    public Ruudukko tietokoneenRuudukko;
-    Random random;
-    GrafiikkaTest g;
-    public int pituusAsetaLaiva;
-    public int leveysAsetaLaiva;
-    public boolean asetusKaynnissa;
+    Grafiikka h;
+    Ruudukko oma;
+    Ruudukko kone;
+    public Random random;
 
     public Kayttoliittyma() {
-        this.random = new Random();
-        this.lukija = new Scanner(System.in);
-        this.omaRuudukko = new Ruudukko(true);
-        this.tietokoneenRuudukko = new Ruudukko(false);
+
     }
 
     public void kaynnista() { //käynnistää pelin
-        
-        this.g = new GrafiikkaTest(this);
-        System.out.println("Aseta laivat!\n");
-        System.out.println(this.omaRuudukko.toString());
+        this.oma = new Ruudukko(true);
+        this.kone = new Ruudukko(false);
+        this.h = new Grafiikka(oma, kone);
+        this.random = new Random();
+
         asetaLaivat();
-        peliKayntiin();
-    }
-
-    private void asetaLaivat() { //asettaa laivatnumerot
-        asetaLaiva(2);
-        asetaLaiva(2);
-        asetaLaiva(3);
-        asetaLaiva(3);
-        asetaLaiva(4);
-        Logiikka.asetaTietokoneenLaiva(2, this.tietokoneenRuudukko);
-        Logiikka.asetaTietokoneenLaiva(2, this.tietokoneenRuudukko);
-        Logiikka.asetaTietokoneenLaiva(3, this.tietokoneenRuudukko);
-        Logiikka.asetaTietokoneenLaiva(3, this.tietokoneenRuudukko);
-        Logiikka.asetaTietokoneenLaiva(4, this.tietokoneenRuudukko);
+        paivitaGrafiikka();
+        pommitusvaihe();
 
     }
 
-    private void asetaLaiva(int i) { //asettaa laivat. yksittäiset laivat pitää olla vierekkäin.
-        System.out.println("Valitse laivan pään koordinaatit " + i + " pituiselle laivalle.\n");
+    private void asetaLaivat() {
+        int x = 2;
+        for (int i = 0; i < 5; i++) {
+            h.teksti.setText("Aseta Laivat!    ");
+            asetaLaiva(x);
+            h.teksti.setText("Laiva asetettu!");
+            if (i == 1) {
+                x = 3;
+            } else if (i == 3) {
+                x = 4;
+            }
+        }
+        asetaKoneenLaiva(2);
+        asetaKoneenLaiva(2);
+        asetaKoneenLaiva(2);
+        asetaKoneenLaiva(3);
+        asetaKoneenLaiva(3);
+        asetaKoneenLaiva(4);
 
-        leveysAsetaLaiva = 8;
-        pituusAsetaLaiva = 8;
-        boolean pysty = false;
+    }
 
-//        System.out.print("Tuleeko laiva pysty vai vaakatasoon ? (p/l): ");
-//        String suunta = lukija.nextLine();
-//        if (suunta.equals("p")) {
-//            pysty = true;
-//        }
-        asetusKaynnissa = true;
+    private void asetaLaiva(int i) {
+        int montaEnnen = oma.montakoLaivaa();
         while (true) {
-            
-            if (Logiikka.tarkistaMahtuukoLaiva(leveysAsetaLaiva, pituusAsetaLaiva, pysty, i, omaRuudukko) == true) {
-                asetusKaynnissa = false;
-                break;                                                       //tai meneekö se jonkun toisen laivan päälle.
-            }
-        }
-
-        omaRuudukko.luoLaiva(leveysAsetaLaiva, pituusAsetaLaiva, pysty, i);
-        System.out.println("\nLaiva asetettu!");
-        System.out.println(omaRuudukko.toString());
-    }
-
-    public int valitseLeveysKoordinaatti() {
-
-        while (true) { // valitaan ensin leveyssuuntainen
-            System.out.print("Leveys (A-H): ");
-            String leveys = lukija.nextLine();
-            int leveys2 = Logiikka.haeKordinaatti(leveys);
-            if (leveys2 != 0) {
-                return leveys2;
-            }
-            System.out.println("Koordinaatin pitää olla väliltä A-H. (Ota huomioon laivan perä!)");
-        }
-    }
-
-    public int valitsePituusKoordinaatti() {
-        while (true) { // sitten pituusssuuntainen
-            int pituus = 0;
-            System.out.print("Pituus (1-8): ");
-            String x = lukija.nextLine();
-            try {
-                pituus = Integer.parseInt(x);
-            } catch (NumberFormatException nfe) {
-                System.out.println("Ei ole numero väliltä 1-8.(Ota huomioon laivan perä!)");
-            }
-            if (pituus > 0 && pituus < 9) {
-                return pituus;
-            }
-        }
-    }
-
-    private void peliKayntiin() {
-        while (true) {
-            System.out.println("---OMA RUUDUKKO---");
-            System.out.println(omaRuudukko);
-            System.out.println("---TIETOKONEEN RUUDUKKO---");
-            System.out.println(tietokoneenRuudukko);
-
-            ammu();
-
-            if (tietokoneenRuudukko.onkoKaikkiLaivatUponneet() == true) {
-                System.out.println("Jihuu! Voitto!!");
-                break;
-            }
-
-            System.out.println("JEA");
-            omaRuudukko.tietokoneAmmuLaivaa(random.nextInt(7) + 1, random.nextInt(7) + 1);
-
-            if (omaRuudukko.onkoKaikkiLaivatUponneet()) {
-                System.out.println("Voi EI! Häviö :(");
+            this.h.laivanAsetusKaynnissa = true;
+            this.h.laivanKoko = i;
+            if (oma.montakoLaivaa() >= montaEnnen + i) {
+                this.h.laivanAsetusKaynnissa = false;
                 break;
             }
 
         }
     }
 
-    private void ammu() {
+    private void paivitaGrafiikka() {
+        oma.paivitaGrafiikka();
+        kone.paivitaGrafiikka();
+    }
+
+    private void asetaKoneenLaiva(int i) {
         while (true) {
-            System.out.print("Valitse ammuttavat koordinaatit(Mallilla A-8): ");
-            String koordinaatit = lukija.nextLine();
+            int p = random.nextInt(7);
+            int l = random.nextInt(7);
+            boolean suunta = random.nextBoolean();
 
-            int pituus = 0;
-            int leveys = Logiikka.haeKordinaatti("" + koordinaatit.charAt(0));
-            try {
-                pituus = Integer.parseInt("" + koordinaatit.charAt(2));
-            } catch (NumberFormatException nfe) {
+            if (kone.mahtuukoLaivaRuudukkuoon(l, p, i, suunta) == true && kone.ruuduissaJoLaiva(l, p, i, suunta) == false) {
+                kone.luoLaiva(l, p, suunta, i);
+                break;
             }
+        }
 
-            if (pituus > 0 && pituus < 9 && leveys != 0) {
-                tietokoneenRuudukko.ammuLaivaa(leveys - 1, pituus - 1);
+    }
+
+    private void pommitusvaihe() {
+        h.teksti.setText("Pommita!!");
+        while (true) {
+            h.taisteluVaiheKaynnissa = true;
+            if (oma.onkoKaikkiLaivatUponneet() == true) {
+                h.teksti.setText("Hävisit! :(");
+                break;
+            } else if (kone.onkoKaikkiLaivatUponneet() == true) {
+                h.teksti.setText("Voitit!!");
                 break;
             }
 
         }
     }
-
 }

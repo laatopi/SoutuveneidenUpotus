@@ -33,12 +33,6 @@ public class RuutuTest {
 
     }
 
-    @Test
-    public void ulkoasuToimii() {
-        assertTrue(ruutu.toString().equals("x"));
-        ruutu.asetaLaiva();
-        assertTrue(ruutu.toString().equals("+"));
-    }
 
     @Test
     public void asetaLaivaToimii() {

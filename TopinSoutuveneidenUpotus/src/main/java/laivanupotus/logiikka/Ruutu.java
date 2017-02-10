@@ -5,34 +5,27 @@
  */
 package laivanupotus.logiikka;
 
+import laivanupotus.grafiikka.Grafiikka.CellPaneOma;
+
 /**
  *
  * @author laatopi
+ *
+ * Ruutu on yksittäinen ruutu joka sisältää sen tilan, eli onko se amuttu, onko
+ * siinä laiva, ja onko ruudussa oleva laiva kokonaisuudessaan uponnut.
+ *
+ *
  */
 public class Ruutu {
 
     Boolean laiva;
     Boolean ammuttu;
     LaivaLaskuri laskuri;
+    CellPaneOma paneeli;
 
     public Ruutu() { //tila 0 = tyhjä ei ammuttu, tila 1 = tyhja ammuttu, tila 3 laiva ei ammuttu, tila 4 laiva ammuttu
         laiva = false;
         ammuttu = false;
-    }
-
-    @Override
-    public String toString() { // Näyttää yksittäisen ruudun ulkoasun
-        if (laiva && ammuttu && laskuri.arvo() <= 0) { //jos laskuri arvo 0 niin koko laiva on uponnut
-            return "@";
-        } else if (laiva && ammuttu) {
-            return "o";
-        } else if (laiva) {
-            return "+";
-        } else if (ammuttu) {
-            return "#";
-        } else {
-            return "x";
-        }
     }
 
     public void asetaLaiva() { //muuttaa ruudun tilaa
@@ -42,18 +35,6 @@ public class Ruutu {
     public boolean onkoRuudussaLaiva() {
         return this.laiva;
     }
-
-//    public String toStringTietokone() { // Näyttää yksittäisen ruudun ulkoasun
-//        if (laiva && ammuttu && laskuri.arvo() <= 0) { //MUUTA TAKAISIN!!! laiva == false && ammuttu true
-//            return "@";
-//        } else if (laiva && ammuttu) {
-//            return "o";
-//        } else if (laiva) {
-//            return "+";
-//        } else {
-//            return "x";
-//        }
-//    }
 
     public void ampuminen() {
         this.ammuttu = true;
@@ -66,8 +47,12 @@ public class Ruutu {
     public void asetaLaskuri(LaivaLaskuri laskuri) {
         this.laskuri = laskuri;
     }
-    
+
     public LaivaLaskuri palautaLaskuri() {
         return this.laskuri;
+    }
+
+    public void asetaPaneeli(CellPaneOma paneeli) {
+        this.paneeli = paneeli;
     }
 }

@@ -5,7 +5,8 @@
  */
 package laivanupotus.kayttoliittyma;
 
-import laivanupotus.grafiikka.GrafiikkaTest;
+import laivanupotus.grafiikka.Grafiikka;
+import laivanupotus.logiikka.Ruudukko;
 
 /**
  *
