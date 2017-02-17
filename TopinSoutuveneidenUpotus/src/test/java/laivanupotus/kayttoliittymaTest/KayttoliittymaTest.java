@@ -1,11 +1,10 @@
-package laivanupotus;
+package laivanupotus.kayttoliittymaTest;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import laivanupotus.kayttoliittyma.Kayttoliittyma;
@@ -28,31 +27,17 @@ public class KayttoliittymaTest {
     public KayttoliittymaTest() {
     }
 
-    @BeforeClass
-    public static void setUpClass() {
-    }
-
-    @AfterClass
-    public static void tearDownClass() {
-    }
-
     @Before
     public void setUp() {
-        k = new Kayttoliittyma();
-    }
-
-    @After
-    public void tearDown() {
+        this.k = new Kayttoliittyma();
     }
 
     @Test
-    public void ListaToimii() {
-        
-    }
-
-    @Test
-    public void valitseLeveysToimii() {
-        
+    public void KonstruktoriToimii() {
+        assertTrue(k.getOma() != null);
+        assertTrue(k.getH()!= null);
+        assertTrue(k.getKone() != null);
+        assertTrue(k.getRandom() != null);
     }
 
     // TODO add test methods here.

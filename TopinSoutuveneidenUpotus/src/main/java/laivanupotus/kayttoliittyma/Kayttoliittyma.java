@@ -13,12 +13,8 @@ import laivanupotus.logiikka.Ruudukko;
 import laivanupotus.logiikka.Ruudukko;
 
 /**
- *
- * @author laatopi
- * 
  * luokka tarjoaa pelin etenemiseen liittyvat metodit ja toteuttaa ne oikeassa
  * oikeassa järjestyksessä.
- *
  */
 public class Kayttoliittyma {
 
@@ -27,22 +23,46 @@ public class Kayttoliittyma {
     Ruudukko kone;
     public Random random;
 
+    /**
+     *  Konstruktori luo kaikki ohjelmaan tarvittavat oliot, kovakoodattuna pelaaja
+     * vastaan tietokone.
+     */
     public Kayttoliittyma() {
-
-    }
-
-    public void kaynnista() { //käynnistää pelin
         this.oma = new Ruudukko(true);
         this.kone = new Ruudukko(false);
         this.h = new Grafiikka(oma, kone);
         this.random = new Random();
+    }
 
+    public Grafiikka getH() {
+        return h;
+    }
+
+    public Ruudukko getOma() {
+        return oma;
+    }
+
+    public Ruudukko getKone() {
+        return kone;
+    }
+
+    public Random getRandom() {
+        return random;
+    }
+    
+    /**
+     * Kaynnistaa ohjelman.
+     */
+    public void kaynnista() { //käynnistää pelin
         asetaLaivat();
         paivitaGrafiikka();
         pommitusvaihe();
 
     }
-
+    
+    /**
+     * asettaa laivat. käyttää ruudukon klikkauksia laivan asettamiseen.
+     */
     private void asetaLaivat() {
         int x = 2;
         for (int i = 0; i < 5; i++) {
@@ -63,7 +83,13 @@ public class Kayttoliittyma {
         asetaKoneenLaiva(4);
 
     }
-
+    
+    /**
+     * asettaa yksittäisen laivan
+     * 
+     * @param i laivan koko.
+     * 
+     */
     private void asetaLaiva(int i) {
         int montaEnnen = oma.montakoLaivaa();
         while (true) {
@@ -76,12 +102,20 @@ public class Kayttoliittyma {
 
         }
     }
-
+    
+    /**
+     * paivittaa ruudukkojen grafiikat ampumisen jälkeen.
+     */
     private void paivitaGrafiikka() {
         oma.paivitaGrafiikka();
         kone.paivitaGrafiikka();
     }
-
+    
+    /**
+     * asettaa tietokoneelle satunnaiseen paikkaan laivan.
+     * 
+     * @param i laivan koko.
+     */
     private void asetaKoneenLaiva(int i) {
         while (true) {
             int p = random.nextInt(7);
@@ -95,7 +129,10 @@ public class Kayttoliittyma {
         }
 
     }
-
+    
+    /**
+     * pommitus vaihe lähtee käyntiin kun laivat asetettu.
+     */
     private void pommitusvaihe() {
         h.teksti.setText("Pommita!!");
         while (true) {
@@ -109,5 +146,7 @@ public class Kayttoliittyma {
             }
 
         }
+
     }
+
 }

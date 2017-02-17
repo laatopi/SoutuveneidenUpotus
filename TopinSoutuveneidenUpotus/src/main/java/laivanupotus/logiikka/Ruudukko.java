@@ -1,17 +1,9 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package laivanupotus.logiikka;
 
 import java.util.ArrayList;
 import java.util.Random;
 
 /**
- *
- * @author laatopi
- *
  * Ruudukko sisältää kokonaisuudessaan kaikki ruudukon yleisen hallintaan
  * liittyvät metodit, eli se hallitsee ruutuja.
  */
@@ -21,7 +13,6 @@ public class Ruudukko {
      * Itse ruudukko.
      */
     public Ruutu[][] ruudukko;
-
     /**
      * Onko tietokoneen vai pelaajan ruudukko.
      */
@@ -35,6 +26,7 @@ public class Ruudukko {
     /**
      * Konstruktori luo aina 8x8 ruudukon, ja asettaa alustavasti jokaiseen
      * tyhjan ruudun.
+     * @param oma kertoo onko ruudukko pelaajan vai tietokoneen. true jos on.
      */
     public Ruudukko(boolean oma) { //luo ruudukon
 
@@ -58,31 +50,39 @@ public class Ruudukko {
      * @param laivanKoko kuinka pitkästä laivasta on kyse int muuttujana
      */
     public void luoLaiva(int leveys, int pituus, boolean pysty, int laivanKoko) {
-        if (mahtuukoLaivaRuudukkuoon(leveys, pituus, laivanKoko, pysty) == true) {
-            if (ruuduissaJoLaiva(leveys, pituus, laivanKoko, pysty) == false) {
+        int pystyK = pituus;
+        int vaakaK = leveys;
+        boolean onkoPystyssa = pysty;
+        if (laivanKoko >= 5 || laivanKoko <= 0) {
+            return;
+        }
+        if (mahtuukoLaivaRuudukkuoon(vaakaK, pystyK, laivanKoko, onkoPystyssa) == true) {
+            if (ruuduissaJoLaiva(vaakaK, pystyK, laivanKoko, onkoPystyssa) == false) {
 
                 LaivaLaskuri laskuri = new LaivaLaskuri();
                 laskurit.add(laskuri);
                 for (int i = 0; i < laivanKoko; i++) {
-                    ruudukko[pituus][leveys].asetaLaiva();
-                    ruudukko[pituus][leveys].asetaLaskuri(laskuri);
-                    ruudukko[pituus][leveys].laskuri.kasvata();
-                    if (pysty) {
-                        pituus++;
+                    ruudukko[pystyK][vaakaK].asetaLaiva();
+                    ruudukko[pystyK][vaakaK].asetaLaskuri(laskuri);
+                    ruudukko[pystyK][vaakaK].laskuri.kasvata();
+                    if (onkoPystyssa) {
+                        pystyK++;
                     } else {
-                        leveys++;
+                        vaakaK++;
                     }
-
                 }
             }
         }
     }
 
     /**
-     *
      * Tarkistaa onko ruuduissa mihin yritetään pistää laivaa jo joissain niissä
      * laiva.
-     *
+     * 
+     * @param leveys leveyskoordinaatti
+     * @param pituus pituuskoordinaatti
+     * @param pysty onko laiva pystyssä (true) vai vaakatasossa (false)
+     * @param laivanKoko kuinka pitkästä laivasta on kyse int muuttujana
      *
      * @return false jos näin ei ole, true jos on.
      */
@@ -103,15 +103,21 @@ public class Ruudukko {
     /**
      * Metodi katsoo mahtuuko laiva ruudukkoon, eli toisinsanoen on lähinnä
      * estämässä arrayoutofboundexceptionit.
+     * 
+     * @param leveys leveyskoordinaatti
+     * @param pituus pituuskoordinaatti
+     * @param pysty onko laiva pystyssä (true) vai vaakatasossa (false)
+     * @param laivanKoko kuinka pitkästä laivasta on kyse int muuttujana
      *
      * @return palauttaa true jos näin on, false jos ei ole.
      */
     public boolean mahtuukoLaivaRuudukkuoon(int leveys, int pituus, int laivanKoko, boolean pysty) {
-        if (pysty) {
-            if (pituus + (laivanKoko - 1) >= 8) {
+        boolean onkoPystyssa = pysty;
+        if (onkoPystyssa) {
+            if (pituus + (laivanKoko - 1) >= 8 || pituus < 0) {
                 return false;
             }
-        } else if (leveys + (laivanKoko - 1) >= 8) {
+        } else if (leveys + (laivanKoko - 1) >= 8 || leveys < 0) {
             return false;
         }
         return true;
@@ -120,13 +126,15 @@ public class Ruudukko {
     /**
      * Ampuu parametrien osoittaamaan koordinaattiin, ja mikäli osuu laivaan,
      * ottaa sen huomioon ja merkitsee laivan laskuriin yhden vähemmän.
-     *
+     * 
+     * @param leveys leveyskoordinaatti
+     * @param pituus pituuskoordinaatti
      */
     public void ammuLaivaa(int leveys, int pituus) {
-        ruudukko[pituus][leveys].ampuminen();
-        if (ruudukko[pituus][leveys].onkoRuudussaLaiva() == true) {
+        if (ruudukko[pituus][leveys].onkoRuudussaLaiva() == true && ruudukko[pituus][leveys].ammuttu == false) {
             ruudukko[pituus][leveys].laskuri.vahenna();
         }
+        ruudukko[pituus][leveys].ampuminen();
     }
 
     /**
@@ -147,7 +155,6 @@ public class Ruudukko {
             pituus = (random.nextInt(8));
             leveys = (random.nextInt(8));
         }
-        System.out.println(pituus + " hmm " + leveys);
         ruudukko[pituus][leveys].ampuminen();
         if (ruudukko[pituus][leveys].onkoRuudussaLaiva() == true) {
             ruudukko[pituus][leveys].laskuri.vahenna();
@@ -155,9 +162,11 @@ public class Ruudukko {
 
         //todo fiksu ampuminen eikä satunnaista hömppää
     }
+
     /**
      * Katsoo ovatko kyseisen ruudukon kaikki laivat uponneet.
      *
+     * @return true jos on, false jos ei.
      */
     public boolean onkoKaikkiLaivatUponneet() {
         for (LaivaLaskuri laskuri : laskurit) {
@@ -182,9 +191,9 @@ public class Ruudukko {
                 }
             }
         }
-
         return x;
     }
+
     /**
      * paivittaa jokaisen ruudun oman grafiiikan.
      *
@@ -192,7 +201,9 @@ public class Ruudukko {
     public void paivitaGrafiikka() {
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
-                ruudukko[i][j].paneeli.paivita();
+                if (ruudukko[i][j].paneeli != null) {
+                    ruudukko[i][j].paneeli.paivita();
+                }
             }
         }
     }
