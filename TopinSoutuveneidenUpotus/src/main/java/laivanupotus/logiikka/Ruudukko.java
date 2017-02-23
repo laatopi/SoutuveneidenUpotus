@@ -9,23 +9,15 @@ import java.util.Random;
  */
 public class Ruudukko {
 
-    /**
-     * Itse ruudukko.
-     */
-    public Ruutu[][] ruudukko;
-    /**
-     * Onko tietokoneen vai pelaajan ruudukko.
-     */
-    public boolean oma;
-
-    /**
-     * Lista laivojen laskureista eli laivakokonaisuuksien tiloista.
-     */
-    public ArrayList<LaivaLaskuri> laskurit;
+    private Ruutu[][] ruudukko;
+    private boolean oma;
+    private ArrayList<LaivaLaskuri> laskurit;
+    private Pino ta;
 
     /**
      * Konstruktori luo aina 8x8 ruudukon, ja asettaa alustavasti jokaiseen
      * tyhjan ruudun.
+     *
      * @param oma kertoo onko ruudukko pelaajan vai tietokoneen. true jos on.
      */
     public Ruudukko(boolean oma) { //luo ruudukon
@@ -39,6 +31,9 @@ public class Ruudukko {
             }
         }
         this.oma = oma;
+
+        this.ta = new Pino();
+
     }
 
     /**
@@ -64,7 +59,7 @@ public class Ruudukko {
                 for (int i = 0; i < laivanKoko; i++) {
                     ruudukko[pystyK][vaakaK].asetaLaiva();
                     ruudukko[pystyK][vaakaK].asetaLaskuri(laskuri);
-                    ruudukko[pystyK][vaakaK].laskuri.kasvata();
+                    ruudukko[pystyK][vaakaK].palautaLaskuri().kasvata();
                     if (onkoPystyssa) {
                         pystyK++;
                     } else {
@@ -78,7 +73,7 @@ public class Ruudukko {
     /**
      * Tarkistaa onko ruuduissa mihin yritetään pistää laivaa jo joissain niissä
      * laiva.
-     * 
+     *
      * @param leveys leveyskoordinaatti
      * @param pituus pituuskoordinaatti
      * @param pysty onko laiva pystyssä (true) vai vaakatasossa (false)
@@ -103,7 +98,7 @@ public class Ruudukko {
     /**
      * Metodi katsoo mahtuuko laiva ruudukkoon, eli toisinsanoen on lähinnä
      * estämässä arrayoutofboundexceptionit.
-     * 
+     *
      * @param leveys leveyskoordinaatti
      * @param pituus pituuskoordinaatti
      * @param pysty onko laiva pystyssä (true) vai vaakatasossa (false)
@@ -126,13 +121,13 @@ public class Ruudukko {
     /**
      * Ampuu parametrien osoittaamaan koordinaattiin, ja mikäli osuu laivaan,
      * ottaa sen huomioon ja merkitsee laivan laskuriin yhden vähemmän.
-     * 
+     *
      * @param leveys leveyskoordinaatti
      * @param pituus pituuskoordinaatti
      */
-    public void ammuLaivaa(int leveys, int pituus) {
-        if (ruudukko[pituus][leveys].onkoRuudussaLaiva() == true && ruudukko[pituus][leveys].ammuttu == false) {
-            ruudukko[pituus][leveys].laskuri.vahenna();
+    public void ammuLaivaa(int pituus, int leveys) {
+        if (ruudukko[pituus][leveys].onkoRuudussaLaiva() == true && ruudukko[pituus][leveys].onkoAmmuttu() == false) {
+            ruudukko[pituus][leveys].palautaLaskuri().vahenna();
         }
         ruudukko[pituus][leveys].ampuminen();
     }
@@ -140,27 +135,68 @@ public class Ruudukko {
     /**
      *
      * Metodi jolla tietokone ampuu laivaa. Katsoo että ei ammu ruutuun mihin on
-     * jo ampunut, mutta ei sisällä tekoälyä eli tietokone ei jatkaa satunnaista
-     * pommittamista vaikka olisi osunut edellisellä.
+     * jo ampunut, ja jos osuu, niin lisää stackkiin viereiset ruudut ja pommittaa ne tyhjäksi.
+     * tekoäly on melko tyhmä mutta satunnaista käyttävää parempi.
      *
      */
     public void tietokoneAmmuLaivaa() {
         if (onkoKaikkiLaivatUponneet() == true) {
             return;
         }
-        Random random = new Random();
-        int pituus = random.nextInt(8);
-        int leveys = random.nextInt(8);
-        while (this.ruudukko[pituus][leveys].ammuttu == true) {
-            pituus = (random.nextInt(8));
-            leveys = (random.nextInt(8));
+
+        boolean laivaUpotettuVuorolla = false;
+        int pituus = 0;
+        int leveys = 0;
+
+        if (this.ta.palautaMetsastys() == true) {
+            Random random = new Random();
+            pituus = random.nextInt(8);
+            leveys = random.nextInt(8);
+            while (this.ruudukko[pituus][leveys].onkoAmmuttu() == true) {
+                pituus = (random.nextInt(8));
+                leveys = (random.nextInt(8));
+            }
+        } else {
+            String koordinaatit = this.ta.poppaus();
+            pituus = Character.getNumericValue(koordinaatit.charAt(0));
+            leveys = Character.getNumericValue(koordinaatit.charAt(1));
         }
-        ruudukko[pituus][leveys].ampuminen();
-        if (ruudukko[pituus][leveys].onkoRuudussaLaiva() == true) {
-            ruudukko[pituus][leveys].laskuri.vahenna();
+        ammuLaivaa(pituus, leveys);
+        if (this.ruudukko[pituus][leveys].onkoRuudussaLaiva() == true) {
+            if (this.ruudukko[pituus][leveys].palautaLaskuri().arvo() == 0) {
+                ta.tyhjennaPino();
+                laivaUpotettuVuorolla = true;
+            }
+        }
+        if (this.ta.onkoPinoTyhja() == true) {
+            this.ta.metsastysPaalle();
         }
 
-        //todo fiksu ampuminen eikä satunnaista hömppää
+        if (laivaUpotettuVuorolla == false) {
+            if (this.ruudukko[pituus][leveys].onkoRuudussaLaiva() == true) {
+                this.ta.metsastysPois();
+                if ((leveys + 1) <= 7) {
+                    if (this.ruudukko[pituus][leveys + 1].onkoAmmuttu() == false) {
+                        ta.lisaaPinoon("" + pituus + "" + (leveys + 1));
+                    }
+                }
+                if ((pituus + 1) <= 7) {
+                    if (this.ruudukko[pituus + 1][leveys].onkoAmmuttu() == false) {
+                        ta.lisaaPinoon("" + (pituus + 1) + "" + leveys);
+                    }
+                }
+                if ((leveys - 1) >= 0) {
+                    if (this.ruudukko[pituus][leveys - 1].onkoAmmuttu() == false) {
+                        ta.lisaaPinoon("" + pituus + "" + (leveys - 1));
+                    }
+                }
+                if ((pituus - 1) >= 0) {
+                    if (this.ruudukko[pituus - 1][leveys].onkoAmmuttu() == false) {
+                        ta.lisaaPinoon("" + (pituus - 1) + "" + leveys);
+                    }
+                }
+            }
+        }
     }
 
     /**
@@ -201,10 +237,18 @@ public class Ruudukko {
     public void paivitaGrafiikka() {
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
-                if (ruudukko[i][j].paneeli != null) {
-                    ruudukko[i][j].paneeli.paivita();
+                if (ruudukko[i][j].palautaPaneeli() != null) {
+                    ruudukko[i][j].palautaPaneeli().paivita();
                 }
             }
         }
+    }
+    
+    public boolean onkoOma(){
+        return oma;
+    }
+    
+    public Ruutu[][] getRuudukko(){
+        return this.ruudukko;
     }
 }

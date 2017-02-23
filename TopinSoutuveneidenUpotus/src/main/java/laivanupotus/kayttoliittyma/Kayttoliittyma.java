@@ -11,6 +11,7 @@ import java.util.Random;
 import laivanupotus.grafiikka.Grafiikka;
 import laivanupotus.logiikka.Ruudukko;
 import laivanupotus.logiikka.Ruudukko;
+import laivanupotus.logiikka.pelinTilaMuuttujat;
 
 /**
  * luokka tarjoaa pelin etenemiseen liittyvat metodit ja toteuttaa ne oikeassa
@@ -18,20 +19,23 @@ import laivanupotus.logiikka.Ruudukko;
  */
 public class Kayttoliittyma {
 
-    Grafiikka h;
-    Ruudukko oma;
-    Ruudukko kone;
-    public Random random;
+    private Grafiikka h;
+    private Ruudukko oma;
+    private Ruudukko kone;
+    private Random random;
+    private pelinTilaMuuttujat m;
 
     /**
-     *  Konstruktori luo kaikki ohjelmaan tarvittavat oliot, kovakoodattuna pelaaja
-     * vastaan tietokone.
+     * Konstruktori luo kaikki ohjelmaan tarvittavat oliot, kovakoodattuna
+     * pelaaja vastaan tietokone.
      */
     public Kayttoliittyma() {
+        this.m = new pelinTilaMuuttujat();
         this.oma = new Ruudukko(true);
         this.kone = new Ruudukko(false);
-        this.h = new Grafiikka(oma, kone);
+        this.h = new Grafiikka(oma, kone, m);
         this.random = new Random();
+        
     }
 
     public Grafiikka getH() {
@@ -49,7 +53,7 @@ public class Kayttoliittyma {
     public Random getRandom() {
         return random;
     }
-    
+
     /**
      * Kaynnistaa ohjelman.
      */
@@ -59,16 +63,16 @@ public class Kayttoliittyma {
         pommitusvaihe();
 
     }
-    
+
     /**
      * asettaa laivat. käyttää ruudukon klikkauksia laivan asettamiseen.
      */
     private void asetaLaivat() {
         int x = 2;
         for (int i = 0; i < 5; i++) {
-            h.teksti.setText("Aseta Laivat!    ");
+            h.setTeksti("Aseta Laivat!    ");
             asetaLaiva(x);
-            h.teksti.setText("Laiva asetettu!");
+            h.setTeksti("Laiva asetettu!");
             if (i == 1) {
                 x = 3;
             } else if (i == 3) {
@@ -81,28 +85,26 @@ public class Kayttoliittyma {
         asetaKoneenLaiva(3);
         asetaKoneenLaiva(3);
         asetaKoneenLaiva(4);
-
     }
-    
+
     /**
      * asettaa yksittäisen laivan
-     * 
+     *
      * @param i laivan koko.
-     * 
+     *
      */
     private void asetaLaiva(int i) {
         int montaEnnen = oma.montakoLaivaa();
         while (true) {
-            this.h.laivanAsetusKaynnissa = true;
-            this.h.laivanKoko = i;
+            this.m.setLaivanAsetusKaynnissa(true);
+            this.m.setLaivanKoko(i);
             if (oma.montakoLaivaa() >= montaEnnen + i) {
-                this.h.laivanAsetusKaynnissa = false;
+                this.m.setLaivanAsetusKaynnissa(false);
                 break;
             }
-
         }
     }
-    
+
     /**
      * paivittaa ruudukkojen grafiikat ampumisen jälkeen.
      */
@@ -110,10 +112,10 @@ public class Kayttoliittyma {
         oma.paivitaGrafiikka();
         kone.paivitaGrafiikka();
     }
-    
+
     /**
      * asettaa tietokoneelle satunnaiseen paikkaan laivan.
-     * 
+     *
      * @param i laivan koko.
      */
     private void asetaKoneenLaiva(int i) {
@@ -129,24 +131,28 @@ public class Kayttoliittyma {
         }
 
     }
-    
+
     /**
      * pommitus vaihe lähtee käyntiin kun laivat asetettu.
      */
     private void pommitusvaihe() {
-        h.teksti.setText("Pommita!!");
+        h.setTeksti("Pommita!!");
         while (true) {
-            h.taisteluVaiheKaynnissa = true;
+            m.setTaisteluVaiheKaynnissa(true);
             if (oma.onkoKaikkiLaivatUponneet() == true) {
-                h.teksti.setText("Hävisit! :(");
+                h.setTeksti("Hävisit! :(");
                 break;
             } else if (kone.onkoKaikkiLaivatUponneet() == true) {
-                h.teksti.setText("Voitit!!");
+                h.setTeksti("Voitit!!");
                 break;
             }
 
         }
 
+    }
+    
+    public pelinTilaMuuttujat palautaMuuttujat(){
+        return this.m;
     }
 
 }

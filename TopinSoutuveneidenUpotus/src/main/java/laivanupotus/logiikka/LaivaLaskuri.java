@@ -11,7 +11,7 @@ package laivanupotus.logiikka;
  */
 public class LaivaLaskuri {
 
-    int laskuri;
+    private int laskuri;
 
     /**
      * Luo laivalaskurin, joka alkaa nollasta.

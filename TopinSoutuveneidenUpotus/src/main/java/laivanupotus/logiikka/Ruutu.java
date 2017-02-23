@@ -13,10 +13,10 @@ import laivanupotus.grafiikka.Grafiikka.Paneeli;
  */
 public class Ruutu {
 
-    Boolean laiva;
-    Boolean ammuttu;
-    LaivaLaskuri laskuri;
-    Paneeli paneeli;
+    private Boolean laiva;
+    private Boolean ammuttu;
+    private LaivaLaskuri laskuri;
+    private Paneeli paneeli;
     
     /**
      * Konstruktori joka luo uuden ruudun aloitustilassa eli ei ammuttuna ja
@@ -77,5 +77,9 @@ public class Ruutu {
      */
     public void asetaPaneeli(Paneeli paneeli) {
         this.paneeli = paneeli;
+    }
+    
+    public Paneeli palautaPaneeli(){
+        return this.paneeli;
     }
 }

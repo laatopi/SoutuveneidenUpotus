@@ -24,6 +24,7 @@ import javax.swing.border.Border;
 import javax.swing.border.MatteBorder;
 import laivanupotus.logiikka.Ruudukko;
 import laivanupotus.logiikka.Ruutu;
+import laivanupotus.logiikka.pelinTilaMuuttujat;
 
 /**
  *
@@ -36,11 +37,12 @@ public class Grafiikka {
 
     private final Ruudukko omaRuudukko;
     private final Ruudukko tietokoneenRuudukko;
-    public JLabel teksti;
-    public Boolean laivanAsetusKaynnissa;
-    public boolean taisteluVaiheKaynnissa;
-    public int laivanKoko;
-    private boolean asetusSuunta;
+    private pelinTilaMuuttujat m;
+    private JLabel teksti;
+    
+    public void setTeksti(String teksti){
+        this.teksti.setText(teksti);
+    }
 
     /**
      *
@@ -50,14 +52,11 @@ public class Grafiikka {
      * @param tietokone tietokoneen ruudukko.
      *
      */
-    public Grafiikka(Ruudukko oma, Ruudukko tietokone) {
+    public Grafiikka(Ruudukko oma, Ruudukko tietokone, pelinTilaMuuttujat muuttujat) {
         this.omaRuudukko = oma;
         this.tietokoneenRuudukko = tietokone;
         this.teksti = new JLabel("");
-        this.laivanAsetusKaynnissa = false;
-        this.taisteluVaiheKaynnissa = false;
-        this.laivanKoko = 0;
-        this.asetusSuunta = true;
+        this.m = muuttujat;
         EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
@@ -84,9 +83,9 @@ public class Grafiikka {
     public class RuudukkoPaneeli extends JPanel {
 
         /**
-         * Konstruktori luo paneelin ja jokaiseen kohtaan koordinaatin perusteella
-         * oikeatyyppisen laatan.
-         * 
+         * Konstruktori luo paneelin ja jokaiseen kohtaan koordinaatin
+         * perusteella oikeatyyppisen laatan.
+         *
          * @param teksti on jlabel olio joka päivttää pelin tilaa.
          */
         public RuudukkoPaneeli(JLabel teksti) {
@@ -102,9 +101,9 @@ public class Grafiikka {
                     if (x != 0 && x != 18 && y != 0 && y != 9 && x != 9) {
                         Paneeli cellPane = null;
                         if (x < 9) {
-                            cellPane = new Paneeli(x - 1, y - 1, omaRuudukko.ruudukko[x - 1][y - 1], omaRuudukko);
+                            cellPane = new Paneeli(x - 1, y - 1, omaRuudukko.getRuudukko()[x - 1][y - 1], omaRuudukko);
                         } else {
-                            cellPane = new Paneeli(x - 10, y - 1, tietokoneenRuudukko.ruudukko[x - 10][y - 1], tietokoneenRuudukko);
+                            cellPane = new Paneeli(x - 10, y - 1, tietokoneenRuudukko.getRuudukko()[x - 10][y - 1], tietokoneenRuudukko);
                         }
                         Border border = new MatteBorder(1, 1, 1, 1, Color.darkGray);
                         cellPane.setBorder(border);
@@ -154,24 +153,22 @@ public class Grafiikka {
         private Ruudukko ruudukko;
 
         /**
-         * Pavittaa ruudukon värin, eli 
-         * musta jos ruudussa laiva ja se uponnut.
-         * punainen jos ruudussa laiva jota on ammuttu.
-         * harmaa jos oma ruudukko jossa on laiva.
-         * keltainen jos ruutua ammuttu mutta siellä ei ole laivaa.
-         * sininen jos ruudulle ei ole tehty mitään, tai jos siellä on tietokoneen
-         * laiva jota e iole ammuttu.
+         * Pavittaa ruudukon värin, eli musta jos ruudussa laiva ja se uponnut.
+         * punainen jos ruudussa laiva jota on ammuttu. harmaa jos oma ruudukko
+         * jossa on laiva. keltainen jos ruutua ammuttu mutta siellä ei ole
+         * laivaa. sininen jos ruudulle ei ole tehty mitään, tai jos siellä on
+         * tietokoneen laiva jota e iole ammuttu.
          */
         public void paivita() {
-            if (this.ruudukko.ruudukko[y][x].onkoRuudussaLaiva()
-                    && this.ruudukko.ruudukko[y][x].onkoAmmuttu()
-                    && this.ruudukko.ruudukko[y][x].palautaLaskuri().arvo() <= 0) { //jos laskuri arvo 0 niin koko laiva on uponnut
+            if (this.ruudukko.getRuudukko()[y][x].onkoRuudussaLaiva()
+                    && this.ruudukko.getRuudukko()[y][x].onkoAmmuttu()
+                    && this.ruudukko.getRuudukko()[y][x].palautaLaskuri().arvo() <= 0) { //jos laskuri arvo 0 niin koko laiva on uponnut
                 setBackground(Color.BLACK);
-            } else if (this.ruudukko.ruudukko[y][x].onkoRuudussaLaiva() && this.ruudukko.ruudukko[y][x].onkoAmmuttu()) {
+            } else if (this.ruudukko.getRuudukko()[y][x].onkoRuudussaLaiva() && this.ruudukko.getRuudukko()[y][x].onkoAmmuttu()) {
                 setBackground(Color.red);
-            } else if (this.ruudukko.ruudukko[y][x].onkoRuudussaLaiva() && this.ruudukko.oma == true) {
+            } else if (this.ruudukko.getRuudukko()[y][x].onkoRuudussaLaiva() && this.ruudukko.onkoOma() == true) {
                 setBackground(Color.GRAY);
-            } else if (this.ruudukko.ruudukko[y][x].onkoAmmuttu()) {
+            } else if (this.ruudukko.getRuudukko()[y][x].onkoAmmuttu()) {
                 setBackground(Color.YELLOW);
             } else {
                 setBackground(Color.BLUE);
@@ -180,7 +177,7 @@ public class Grafiikka {
 
         /**
          * Konstruktori luo paneelin.
-         * 
+         *
          * @param x x koordinaatti
          * @param y y koordinaatti
          * @param ruutu siihen liittyvä ruutu
@@ -197,8 +194,33 @@ public class Grafiikka {
 
                 @Override
                 public void mouseEntered(MouseEvent e) {
+                    setBackground(Color.DARK_GRAY);
                     defaultBackground = getBackground();
-                    setBackground(Color.darkGray);
+                    if (m.isLaivanAsetusKaynnissa() == true && ruudukko.onkoOma() == true) {
+                        if (m.isAsetusSuunta() == true) {
+                            for (int i = 0; i < m.getLaivanKoko(); i++) {
+                                if (y + i < 8) {
+                                    if (omaRuudukko.getRuudukko()[y + i][x].onkoRuudussaLaiva() == false) {
+                                        omaRuudukko.getRuudukko()[x][y + i].palautaPaneeli().setBackground(Color.DARK_GRAY);
+                                    } else {
+                                        omaRuudukko.getRuudukko()[x][y + i].palautaPaneeli().setBackground(Color.orange);
+                                    }
+                                }
+                            }
+                        } else {
+                            for (int j = 0; j < m.getLaivanKoko(); j++) {
+                                if (x + j < 8) {
+
+                                    if (omaRuudukko.getRuudukko()[y][x + j].onkoRuudussaLaiva() == false) {
+                                        omaRuudukko.getRuudukko()[x + j][y].palautaPaneeli().setBackground(Color.DARK_GRAY);
+                                    } else {
+                                        omaRuudukko.getRuudukko()[x + j][y].palautaPaneeli().setBackground(Color.orange);
+                                    }
+
+                                }
+                            }
+                        }
+                    }
                 }
 
                 @Override
@@ -213,21 +235,21 @@ public class Grafiikka {
                 public void mouseClicked(MouseEvent e) {
 
                     if (e.getButton() == MouseEvent.BUTTON3) {
-                        if (laivanAsetusKaynnissa == true) {
-                            if (asetusSuunta) {
-                                asetusSuunta = false;
+                        if (m.isLaivanAsetusKaynnissa()== true) {
+                            if (m.isAsetusSuunta()) {
+                                m.setAsetusSuunta(false);
                             } else {
-                                asetusSuunta = true;
+                                m.setAsetusSuunta(true);
                             }
                         }
                     }
                     if (e.getButton() == MouseEvent.BUTTON1) {
-                        if (laivanAsetusKaynnissa == true) {
-                            omaRuudukko.luoLaiva(x, y, asetusSuunta, laivanKoko);
+                        if (m.isLaivanAsetusKaynnissa() == true && ruudukko.onkoOma() == true) {
+                            omaRuudukko.luoLaiva(x, y, m.isAsetusSuunta(), m.getLaivanKoko());
                             paivita();
                         }
-                        if (taisteluVaiheKaynnissa == true && ruudukko.oma == false) {
-                            tietokoneenRuudukko.ammuLaivaa(x, y);
+                        if (m.isTaisteluVaiheKaynnissa()== true && ruudukko.onkoOma() == false && ruudukko.getRuudukko()[y][x].onkoAmmuttu() == false) {
+                            tietokoneenRuudukko.ammuLaivaa(y, x);
                             omaRuudukko.tietokoneAmmuLaivaa();
                         }
 
