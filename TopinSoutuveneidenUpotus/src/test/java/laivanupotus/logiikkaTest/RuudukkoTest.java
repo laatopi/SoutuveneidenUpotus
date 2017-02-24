@@ -7,7 +7,7 @@ package laivanupotus.logiikkaTest;
  */
 import laivanupotus.grafiikka.Grafiikka;
 import laivanupotus.kayttoliittyma.Kayttoliittyma;
-import laivanupotus.logiikka.Ruudukko;
+import laivanupotus.logiikka.*;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -38,7 +38,7 @@ public class RuudukkoTest {
 
     @Test
     public void ruudukkoOnOikeanKokoinen() {
-        assertTrue((ruukukko.ruudukko.length * ruukukko.ruudukko[0].length) == 64);
+        assertTrue((ruukukko.getRuudukko().length * ruukukko.getRuudukko()[0].length) == 64);
     }
 
     @Test
@@ -50,17 +50,17 @@ public class RuudukkoTest {
 
     @Test
     public void ammuLaivaToimiiIlmanLaivaa() {
-        assertTrue(ruukukko.ruudukko[0][0].onkoAmmuttu() == false);
+        assertTrue(ruukukko.getRuudukko()[0][0].onkoAmmuttu() == false);
         ruukukko.ammuLaivaa(0, 0);
-        assertTrue(ruukukko.ruudukko[0][0].onkoAmmuttu() == true);
+        assertTrue(ruukukko.getRuudukko()[0][0].onkoAmmuttu() == true);
     }
 
     @Test
     public void ammuLaivaToimiiLaivalla() {
         ruukukko.luoLaiva(0, 0, true, 2);
-        assertTrue(ruukukko.laskurit.get(0).arvo() == 2);
+        assertTrue(ruukukko.getLaskurit().get(0).arvo() == 2);
         ruukukko.ammuLaivaa(0, 0);
-        assertTrue(ruukukko.laskurit.get(0).arvo() == 1);
+        assertTrue(ruukukko.getLaskurit().get(0).arvo() == 1);
 
     }
 
@@ -77,8 +77,8 @@ public class RuudukkoTest {
         assertTrue(ruukukko.montakoLaivaa() == 2);
         ruukukko.luoLaiva(4, 5, false, 2);
         assertTrue(ruukukko.montakoLaivaa() == 4);
-        assertFalse(ruukukko.laskurit.isEmpty());
-        assertTrue(ruukukko.laskurit.get(0).arvo() == 2);
+        assertFalse(ruukukko.getLaskurit().isEmpty());
+        assertTrue(ruukukko.getLaskurit().get(0).arvo() == 2);
     }
 
     @Test
@@ -106,13 +106,13 @@ public class RuudukkoTest {
         ruukukko.tietokoneAmmuLaivaa();
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
-                assertFalse(ruukukko.ruudukko[i][j].onkoAmmuttu());
+                assertFalse(ruukukko.getRuudukko()[i][j].onkoAmmuttu());
             }
         }
         ruukukko.luoLaiva(0, 0, true, 3);
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
-                if (ruukukko.ruudukko[i][j].onkoAmmuttu() == true) {
+                if (ruukukko.getRuudukko()[i][j].onkoAmmuttu() == true) {
                     assertFalse(ruukukko.onkoKaikkiLaivatUponneet());
                 }
             }
@@ -121,7 +121,7 @@ public class RuudukkoTest {
         assertTrue(ruukukko.montakoLaivaa() == 3);
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
-                if (ruukukko.ruudukko[i][j].onkoAmmuttu() == true && ruukukko.ruudukko[i][j].onkoRuudussaLaiva() == true) {
+                if (ruukukko.getRuudukko()[i][j].onkoAmmuttu() == true && ruukukko.getRuudukko()[i][j].onkoRuudussaLaiva() == true) {
                     assertTrue(ruukukko.montakoLaivaa() == 2);
                 }
             }
@@ -130,16 +130,28 @@ public class RuudukkoTest {
 
     @Test
     public void paivitaToimii() {
-        Kayttoliittyma k  = new Kayttoliittyma();
+        Kayttoliittyma k = new Kayttoliittyma();
         Ruudukko r = k.getOma();
-                
+
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
                 ruukukko.paivitaGrafiikka();
             }
         }
-        r.ruudukko[0][0].ampuminen();
+        r.getRuudukko()[0][0].ampuminen();
         r.paivitaGrafiikka();
+
+    }
+
+    @Test
+    public void lisaaPinoonToimii() {
+        assertTrue(ruukukko.palautaPino().palautaMetsastys());
+        ruukukko.lisaaRuudutPinoon(3, 3);
+        ruukukko.getRuudukko()[3][3].asetaLaiva();
+        ruukukko.lisaaRuudutPinoon(3, 3);
+        assertTrue(ruukukko.palautaPino().palautaPinonKoko() == 4);
+        assertFalse(ruukukko.palautaPino().palautaMetsastys());
+        
         
     }
 }

@@ -11,7 +11,7 @@ import java.util.Random;
 import laivanupotus.grafiikka.Grafiikka;
 import laivanupotus.logiikka.Ruudukko;
 import laivanupotus.logiikka.Ruudukko;
-import laivanupotus.logiikka.pelinTilaMuuttujat;
+import laivanupotus.logiikka.PelinTilaMuuttujat;
 
 /**
  * luokka tarjoaa pelin etenemiseen liittyvat metodit ja toteuttaa ne oikeassa
@@ -23,19 +23,19 @@ public class Kayttoliittyma {
     private Ruudukko oma;
     private Ruudukko kone;
     private Random random;
-    private pelinTilaMuuttujat m;
+    private PelinTilaMuuttujat m;
 
     /**
      * Konstruktori luo kaikki ohjelmaan tarvittavat oliot, kovakoodattuna
      * pelaaja vastaan tietokone.
      */
     public Kayttoliittyma() {
-        this.m = new pelinTilaMuuttujat();
+        this.m = new PelinTilaMuuttujat();
         this.oma = new Ruudukko(true);
         this.kone = new Ruudukko(false);
         this.h = new Grafiikka(oma, kone, m);
         this.random = new Random();
-        
+
     }
 
     public Grafiikka getH() {
@@ -151,7 +151,11 @@ public class Kayttoliittyma {
 
     }
     
-    public pelinTilaMuuttujat palautaMuuttujat(){
+    /**
+     * Pallauttaa pelin tila muuttujat.
+     * @return palauttaa pelin tila muuttujat jota käyttöliittymä päivittelee.
+     */
+    public PelinTilaMuuttujat palautaMuuttujat() {
         return this.m;
     }
 

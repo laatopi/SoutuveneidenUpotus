@@ -8,6 +8,11 @@
 - Näkee jos ruudussa johon on pommitettu on vihollisen laiva.
 - Näkee myös oman ruudukkonsa tilanteen.
 ![Alt text](https://github.com/laatopi/SoutuveneidenUpotus/blob/master/dokumentaatio/kaavio.jpeg)
+- Esimerkkejä sekvensseistä.
+![Alt text](https://github.com/laatopi/SoutuveneidenUpotus/blob/master/dokumentaatio/laivanLuominen.png)
+![Alt text](https://github.com/laatopi/SoutuveneidenUpotus/blob/master/dokumentaatio/ampuminen.png)
+
+
 
 
 

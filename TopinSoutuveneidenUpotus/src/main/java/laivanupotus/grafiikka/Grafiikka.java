@@ -24,7 +24,7 @@ import javax.swing.border.Border;
 import javax.swing.border.MatteBorder;
 import laivanupotus.logiikka.Ruudukko;
 import laivanupotus.logiikka.Ruutu;
-import laivanupotus.logiikka.pelinTilaMuuttujat;
+import laivanupotus.logiikka.PelinTilaMuuttujat;
 
 /**
  *
@@ -37,10 +37,15 @@ public class Grafiikka {
 
     private final Ruudukko omaRuudukko;
     private final Ruudukko tietokoneenRuudukko;
-    private pelinTilaMuuttujat m;
+    private PelinTilaMuuttujat m;
     private JLabel teksti;
-    
-    public void setTeksti(String teksti){
+
+    /**
+     * Asettaa pelin ikkunan vieressä olevan tekstin.
+     *
+     * @param teksti teksti mikä asetetaan.
+     */
+    public void setTeksti(String teksti) {
         this.teksti.setText(teksti);
     }
 
@@ -50,9 +55,11 @@ public class Grafiikka {
      *
      * @param oma pelaajan ruudukko.
      * @param tietokone tietokoneen ruudukko.
+     * @param muuttujat on pelin tila muuttujat, jotta mouseclickkerit tietävät
+     * milloin tehdä mitäkin tapahtumia.
      *
      */
-    public Grafiikka(Ruudukko oma, Ruudukko tietokone, pelinTilaMuuttujat muuttujat) {
+    public Grafiikka(Ruudukko oma, Ruudukko tietokone, PelinTilaMuuttujat muuttujat) {
         this.omaRuudukko = oma;
         this.tietokoneenRuudukko = tietokone;
         this.teksti = new JLabel("");
@@ -200,23 +207,13 @@ public class Grafiikka {
                         if (m.isAsetusSuunta() == true) {
                             for (int i = 0; i < m.getLaivanKoko(); i++) {
                                 if (y + i < 8) {
-                                    if (omaRuudukko.getRuudukko()[y + i][x].onkoRuudussaLaiva() == false) {
-                                        omaRuudukko.getRuudukko()[x][y + i].palautaPaneeli().setBackground(Color.DARK_GRAY);
-                                    } else {
-                                        omaRuudukko.getRuudukko()[x][y + i].palautaPaneeli().setBackground(Color.orange);
-                                    }
+                                    varjaaRuudukotVaaka(i);
                                 }
                             }
                         } else {
                             for (int j = 0; j < m.getLaivanKoko(); j++) {
                                 if (x + j < 8) {
-
-                                    if (omaRuudukko.getRuudukko()[y][x + j].onkoRuudussaLaiva() == false) {
-                                        omaRuudukko.getRuudukko()[x + j][y].palautaPaneeli().setBackground(Color.DARK_GRAY);
-                                    } else {
-                                        omaRuudukko.getRuudukko()[x + j][y].palautaPaneeli().setBackground(Color.orange);
-                                    }
-
+                                    varjaaRuudukotPysty(j);
                                 }
                             }
                         }
@@ -235,7 +232,7 @@ public class Grafiikka {
                 public void mouseClicked(MouseEvent e) {
 
                     if (e.getButton() == MouseEvent.BUTTON3) {
-                        if (m.isLaivanAsetusKaynnissa()== true) {
+                        if (m.isLaivanAsetusKaynnissa() == true) {
                             if (m.isAsetusSuunta()) {
                                 m.setAsetusSuunta(false);
                             } else {
@@ -248,12 +245,28 @@ public class Grafiikka {
                             omaRuudukko.luoLaiva(x, y, m.isAsetusSuunta(), m.getLaivanKoko());
                             paivita();
                         }
-                        if (m.isTaisteluVaiheKaynnissa()== true && ruudukko.onkoOma() == false && ruudukko.getRuudukko()[y][x].onkoAmmuttu() == false) {
+                        if (m.isTaisteluVaiheKaynnissa() == true && ruudukko.onkoOma() == false && ruudukko.getRuudukko()[y][x].onkoAmmuttu() == false) {
                             tietokoneenRuudukko.ammuLaivaa(y, x);
                             omaRuudukko.tietokoneAmmuLaivaa();
                         }
 
                         setBackground(Color.orange);
+                    }
+                }
+
+                private void varjaaRuudukotVaaka(int i) {
+                    if (omaRuudukko.getRuudukko()[y + i][x].onkoRuudussaLaiva() == false) {
+                        omaRuudukko.getRuudukko()[x][y + i].palautaPaneeli().setBackground(Color.DARK_GRAY);
+                    } else {
+                        omaRuudukko.getRuudukko()[x][y + i].palautaPaneeli().setBackground(Color.orange);
+                    }
+                }
+
+                private void varjaaRuudukotPysty(int j) {
+                    if (omaRuudukko.getRuudukko()[y][x + j].onkoRuudussaLaiva() == false) {
+                        omaRuudukko.getRuudukko()[x + j][y].palautaPaneeli().setBackground(Color.DARK_GRAY);
+                    } else {
+                        omaRuudukko.getRuudukko()[x + j][y].palautaPaneeli().setBackground(Color.orange);
                     }
                 }
             });

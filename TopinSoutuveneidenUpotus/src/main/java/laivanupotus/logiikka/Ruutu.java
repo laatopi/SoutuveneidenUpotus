@@ -17,7 +17,7 @@ public class Ruutu {
     private Boolean ammuttu;
     private LaivaLaskuri laskuri;
     private Paneeli paneeli;
-    
+
     /**
      * Konstruktori joka luo uuden ruudun aloitustilassa eli ei ammuttuna ja
      * tyhjänä.
@@ -26,14 +26,14 @@ public class Ruutu {
         laiva = false;
         ammuttu = false;
     }
-    
+
     /**
      * Asettaa ruutuun laivan.
      */
     public void asetaLaiva() { //muuttaa ruudun tilaa
         this.laiva = true;
     }
-    
+
     /**
      * Palauttaa onko ruudussa laiva.
      *
@@ -42,12 +42,14 @@ public class Ruutu {
     public boolean onkoRuudussaLaiva() {
         return this.laiva;
     }
+
     /**
      * muuttaa ruudun tilan ammutuksi.
      */
     public void ampuminen() {
         this.ammuttu = true;
     }
+
     /**
      * Katsoo onko ruuutua ammuttu.
      *
@@ -56,13 +58,16 @@ public class Ruutu {
     public boolean onkoAmmuttu() {
         return this.ammuttu;
     }
+
     /**
      * laittaa ruudulle siihen laivaan kuuluvaan laskurin.
+     *
      * @param laskuri asetettava laskuri olio
      */
     public void asetaLaskuri(LaivaLaskuri laskuri) {
         this.laskuri = laskuri;
     }
+
     /**
      * Palauttaa ruutuun liittyvän laivan laskurin.
      *
@@ -71,15 +76,22 @@ public class Ruutu {
     public LaivaLaskuri palautaLaskuri() {
         return this.laskuri;
     }
+
     /**
      * Asettaa ruudulle siihen kuuluvan grafiikan paneelin.
+     *
      * @param paneeli asetettava paneeli olio.
      */
     public void asetaPaneeli(Paneeli paneeli) {
         this.paneeli = paneeli;
     }
-    
-    public Paneeli palautaPaneeli(){
+
+    /**
+     * Palauttaa ruudun oman paneeli olion.
+     *
+     * @return paneeli paneeli olio.
+     */
+    public Paneeli palautaPaneeli() {
         return this.paneeli;
     }
 }

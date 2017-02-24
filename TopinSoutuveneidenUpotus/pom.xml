@@ -36,10 +36,10 @@
                 <version>1.1.8</version>
                 <configuration>
                     <targetClasses>
-                        <param>laivanupotus.*</param>
+                        <param>laivanupotus.logiikka.*</param>
                     </targetClasses>
                     <targetTests>
-                        <param>laivanupotus.*</param>
+                        <param>laivanupotus.logiikkaTest.*</param>
                     </targetTests>
                 </configuration>
             </plugin>

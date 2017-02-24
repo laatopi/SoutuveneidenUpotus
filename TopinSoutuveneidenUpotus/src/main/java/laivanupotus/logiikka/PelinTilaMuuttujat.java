@@ -6,25 +6,29 @@
 package laivanupotus.logiikka;
 
 /**
+ * Luokka joka sisältää pelinvaihteiden tunnistavat muuttujat.
  *
  * @author laatopi
  */
-public class pelinTilaMuuttujat {
+public class PelinTilaMuuttujat {
 
     private boolean laivanAsetusKaynnissa;
     private boolean taisteluVaiheKaynnissa;
     private int laivanKoko;
     private boolean asetusSuunta;
-    
-//            
-    
-    public pelinTilaMuuttujat(){
+
+    /**
+     * Luo muuttujat alkuasetukssilla aluksi.
+     */
+    public PelinTilaMuuttujat() {
         this.laivanAsetusKaynnissa = false;
         this.taisteluVaiheKaynnissa = false;
         this.laivanKoko = 0;
         this.asetusSuunta = true;
     }
+
     /**
+     * katsoo onko laivansetus tila kaynnissa.
      * @return the laivanAsetusKaynnissa
      */
     public boolean isLaivanAsetusKaynnissa() {
@@ -32,6 +36,7 @@ public class pelinTilaMuuttujat {
     }
 
     /**
+     * asettaa laivanasetuskaynniss tilaksi halutun parametrin.
      * @param laivanAsetusKaynnissa the laivanAsetusKaynnissa to set
      */
     public void setLaivanAsetusKaynnissa(boolean laivanAsetusKaynnissa) {
@@ -39,6 +44,7 @@ public class pelinTilaMuuttujat {
     }
 
     /**
+     * katsoo onko taisteluvaihekaynissa.
      * @return the taisteluVaiheKaynnissa
      */
     public boolean isTaisteluVaiheKaynnissa() {
@@ -46,6 +52,7 @@ public class pelinTilaMuuttujat {
     }
 
     /**
+     * asettaa taisteluvaiheeksi halutun parametrin.
      * @param taisteluVaiheKaynnissa the taisteluVaiheKaynnissa to set
      */
     public void setTaisteluVaiheKaynnissa(boolean taisteluVaiheKaynnissa) {
@@ -53,6 +60,7 @@ public class pelinTilaMuuttujat {
     }
 
     /**
+     * palauttaa laivan koon.
      * @return the laivanKoko
      */
     public int getLaivanKoko() {
@@ -60,6 +68,7 @@ public class pelinTilaMuuttujat {
     }
 
     /**
+     * asettaa laivankoon.
      * @param laivanKoko the laivanKoko to set
      */
     public void setLaivanKoko(int laivanKoko) {
@@ -67,6 +76,7 @@ public class pelinTilaMuuttujat {
     }
 
     /**
+     * palauttaa asetussuunan. true pysty false vaaka.
      * @return the asetusSuunta
      */
     public boolean isAsetusSuunta() {
@@ -74,6 +84,7 @@ public class pelinTilaMuuttujat {
     }
 
     /**
+     * asettaa asetussuunnan. true pysty false vaaka.
      * @param asetusSuunta the asetusSuunta to set
      */
     public void setAsetusSuunta(boolean asetusSuunta) {

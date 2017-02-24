@@ -135,8 +135,9 @@ public class Ruudukko {
     /**
      *
      * Metodi jolla tietokone ampuu laivaa. Katsoo että ei ammu ruutuun mihin on
-     * jo ampunut, ja jos osuu, niin lisää stackkiin viereiset ruudut ja pommittaa ne tyhjäksi.
-     * tekoäly on melko tyhmä mutta satunnaista käyttävää parempi.
+     * jo ampunut, ja jos osuu, niin lisää stackkiin viereiset ruudut ja
+     * pommittaa ne tyhjäksi. tekoäly on melko tyhmä mutta satunnaista käyttävää
+     * parempi.
      *
      */
     public void tietokoneAmmuLaivaa() {
@@ -173,29 +174,7 @@ public class Ruudukko {
         }
 
         if (laivaUpotettuVuorolla == false) {
-            if (this.ruudukko[pituus][leveys].onkoRuudussaLaiva() == true) {
-                this.ta.metsastysPois();
-                if ((leveys + 1) <= 7) {
-                    if (this.ruudukko[pituus][leveys + 1].onkoAmmuttu() == false) {
-                        ta.lisaaPinoon("" + pituus + "" + (leveys + 1));
-                    }
-                }
-                if ((pituus + 1) <= 7) {
-                    if (this.ruudukko[pituus + 1][leveys].onkoAmmuttu() == false) {
-                        ta.lisaaPinoon("" + (pituus + 1) + "" + leveys);
-                    }
-                }
-                if ((leveys - 1) >= 0) {
-                    if (this.ruudukko[pituus][leveys - 1].onkoAmmuttu() == false) {
-                        ta.lisaaPinoon("" + pituus + "" + (leveys - 1));
-                    }
-                }
-                if ((pituus - 1) >= 0) {
-                    if (this.ruudukko[pituus - 1][leveys].onkoAmmuttu() == false) {
-                        ta.lisaaPinoon("" + (pituus - 1) + "" + leveys);
-                    }
-                }
-            }
+            lisaaRuudutPinoon(pituus, leveys);
         }
     }
 
@@ -243,12 +222,65 @@ public class Ruudukko {
             }
         }
     }
-    
-    public boolean onkoOma(){
+
+    /**
+     * Palauttaa ruudukon omistajan.
+     *
+     * @return palauttaa onko ruudukka tietokoneen vai pelaajan.
+     */
+    public boolean onkoOma() {
         return oma;
     }
-    
-    public Ruutu[][] getRuudukko(){
+
+    public Ruutu[][] getRuudukko() {
         return this.ruudukko;
+    }
+
+    public ArrayList<LaivaLaskuri> getLaskurit() {
+        return this.laskurit;
+    }
+
+    /**
+     * Lisaa seuraavaksi pommitettavat ruudut pinoon jotta tietokoneella on
+     * parempi idea mihin ampua.
+     * @param pituus pituus koordinaatti
+     * @param leveys koordinaatti
+     *
+     * 
+     */
+    public void lisaaRuudutPinoon(int pituus, int leveys) {
+        if (this.ruudukko[pituus][leveys].onkoRuudussaLaiva()) {
+            this.ta.metsastysPois();
+            if ((leveys + 1) <= 7) {
+                if (!this.ruudukko[pituus][leveys + 1].onkoAmmuttu()) {
+                    ta.lisaaPinoon("" + pituus + "" + (leveys + 1));
+                }
+            }
+            if ((pituus + 1) <= 7) {
+                if (!this.ruudukko[pituus + 1][leveys].onkoAmmuttu()) {
+                    ta.lisaaPinoon("" + (pituus + 1) + "" + leveys);
+                }
+            }
+            if ((leveys - 1) >= 0) {
+                if (!this.ruudukko[pituus][leveys - 1].onkoAmmuttu()) {
+                    ta.lisaaPinoon("" + pituus + "" + (leveys - 1));
+                }
+            }
+            if ((pituus - 1) >= 0) {
+                if (!this.ruudukko[pituus - 1][leveys].onkoAmmuttu()) {
+                    ta.lisaaPinoon("" + (pituus - 1) + "" + leveys);
+                }
+            }
+        }
+
+    }
+    
+    /**
+     * Palauttaa pinon.
+     * @return palauttaa pinon.
+     */
+
+    public Pino palautaPino() {
+        return this.ta;
     }
 }
