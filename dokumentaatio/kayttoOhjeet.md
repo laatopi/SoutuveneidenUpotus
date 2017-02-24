@@ -14,10 +14,15 @@ Asetuksen jälkeen vastustajan ruudukkoa voi pommittaa klikkaamalla oikeaa (vast
 ruudukkoa.
 
 Sininen Ruutu: Ruutu jota ei ole pommitettu.
+
 Keltainen Ruutu: Pommitettu ruutu jossa ei ollut laivaa.
+
 Punainen Ruutu: Pommitettu ruutu jossa oli laiva.
+
 Musta Ruutu: Pomitettu ruutu jonka laiva on uponnut.
+
 Harmaa Ruutu(Ainoastaan oma ruudukko): ruutu jossa on oma laiva.
+
 
 Peli päättyy kun jomman kumman laivat ovat uponneet.
 
