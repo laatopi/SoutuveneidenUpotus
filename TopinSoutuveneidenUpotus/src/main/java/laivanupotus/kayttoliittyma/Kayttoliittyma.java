@@ -30,12 +30,7 @@ public class Kayttoliittyma {
      * pelaaja vastaan tietokone.
      */
     public Kayttoliittyma() {
-        this.m = new PelinTilaMuuttujat();
-        this.oma = new Ruudukko(true);
-        this.kone = new Ruudukko(false);
-        this.h = new Grafiikka(oma, kone, m);
-        this.random = new Random();
-
+        reset();
     }
 
     public Grafiikka getH() {
@@ -57,7 +52,7 @@ public class Kayttoliittyma {
     /**
      * Kaynnistaa ohjelman.
      */
-    public void kaynnista() { //käynnistää pelin
+    private void kaynnista() { //käynnistää pelin
         asetaLaivat();
         paivitaGrafiikka();
         pommitusvaihe();
@@ -109,8 +104,7 @@ public class Kayttoliittyma {
      * paivittaa ruudukkojen grafiikat ampumisen jälkeen.
      */
     private void paivitaGrafiikka() {
-        oma.paivitaGrafiikka();
-        kone.paivitaGrafiikka();
+        h.paivitaGrafiikat();
     }
 
     /**
@@ -148,15 +142,35 @@ public class Kayttoliittyma {
             }
 
         }
-
+        m.setTaisteluVaiheKaynnissa(false);
+        if (h.loppuKysely()) {
+            h.suljeIkkuna();
+            reset();
+        } else {
+            h.suljeIkkuna();
+        }
     }
-    
+
     /**
      * Pallauttaa pelin tila muuttujat.
+     *
      * @return palauttaa pelin tila muuttujat jota käyttöliittymä päivittelee.
      */
     public PelinTilaMuuttujat palautaMuuttujat() {
         return this.m;
+    }
+
+    /**
+     *
+     * resettaa pelin.
+     */
+    private void reset() {
+        this.m = new PelinTilaMuuttujat();
+        this.oma = new Ruudukko(true);
+        this.kone = new Ruudukko(false);
+        this.h = new Grafiikka(oma, kone, m);
+        this.random = new Random();
+        kaynnista();
     }
 
 }

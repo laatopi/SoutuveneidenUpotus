@@ -128,20 +128,7 @@ public class RuudukkoTest {
         }
     }
 
-    @Test
-    public void paivitaToimii() {
-        Kayttoliittyma k = new Kayttoliittyma();
-        Ruudukko r = k.getOma();
-
-        for (int i = 0; i < 8; i++) {
-            for (int j = 0; j < 8; j++) {
-                ruukukko.paivitaGrafiikka();
-            }
-        }
-        r.getRuudukko()[0][0].ampuminen();
-        r.paivitaGrafiikka();
-
-    }
+    
 
     @Test
     public void lisaaPinoonToimii() {

@@ -16,6 +16,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
@@ -23,7 +24,6 @@ import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.border.Border;
 import javax.swing.border.MatteBorder;
 import laivanupotus.logiikka.Ruudukko;
-import laivanupotus.logiikka.Ruutu;
 import laivanupotus.logiikka.PelinTilaMuuttujat;
 
 /**
@@ -39,6 +39,9 @@ public class Grafiikka {
     private final Ruudukko tietokoneenRuudukko;
     private PelinTilaMuuttujat m;
     private JLabel teksti;
+    private Paneeli[][] paneelitRuudukkoOma;
+    private Paneeli[][] paneelitRuudukkoKone;
+    private JFrame kehys;
 
     /**
      * Asettaa pelin ikkunan vieressä olevan tekstin.
@@ -47,6 +50,18 @@ public class Grafiikka {
      */
     public void setTeksti(String teksti) {
         this.teksti.setText(teksti);
+    }
+
+    /**
+     * Metodi päivittää grafiikat.
+     */
+    public void paivitaGrafiikat() {
+        for (int i = 0; i < 8; i++) {
+            for (int j = 0; j < 8; j++) {
+                paneelitRuudukkoOma[i][j].paivita();
+                paneelitRuudukkoKone[i][j].paivita();
+            }
+        }
     }
 
     /**
@@ -64,6 +79,8 @@ public class Grafiikka {
         this.tietokoneenRuudukko = tietokone;
         this.teksti = new JLabel("");
         this.m = muuttujat;
+        this.paneelitRuudukkoOma = new Paneeli[8][8];
+        this.paneelitRuudukkoKone = new Paneeli[8][8];
         EventQueue.invokeLater(new Runnable() {
             @Override
             public void run() {
@@ -73,14 +90,45 @@ public class Grafiikka {
                 }
 
                 JFrame frame = new JFrame("Laivanupotus");
+                frame.setResizable(false);
                 frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                 frame.setLayout(new BorderLayout());
                 frame.add(new RuudukkoPaneeli(teksti));
                 frame.pack();
                 frame.setLocationRelativeTo(null);
                 frame.setVisible(true);
+                kehys = frame;
             }
         });
+    }
+
+    /**
+     *
+     * Kysyy haluaako henkilö pelata uudestaan.
+     *
+     * @return palauttaa napin painalluksen vastuaksen.
+     */
+    public boolean loppuKysely() {
+        JFrame f = new JFrame("");
+        f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        f.pack();
+        f.setLocationRelativeTo(null);
+        Object[] vaihtoehdot = {"Kyllä", "Ei"};
+        int i = JOptionPane.showOptionDialog(f, "Uusi peli?", "Laivanupotus", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE, null, vaihtoehdot, vaihtoehdot[0]);
+        if (i == 0) {
+            f.dispose();
+            return true;
+        }
+        f.dispose();
+        return false;
+    }
+
+    /**
+     *
+     * Sulkee ruudukkoikkunan.
+     */
+    public void suljeIkkuna() {
+        kehys.dispose();
     }
 
     /**
@@ -108,11 +156,13 @@ public class Grafiikka {
                     if (x != 0 && x != 18 && y != 0 && y != 9 && x != 9) {
                         Paneeli cellPane = null;
                         if (x < 9) {
-                            cellPane = new Paneeli(x - 1, y - 1, omaRuudukko.getRuudukko()[x - 1][y - 1], omaRuudukko);
+                            cellPane = new Paneeli(x - 1, y - 1, omaRuudukko);
+                            paneelitRuudukkoOma[x - 1][y - 1] = cellPane;
                         } else {
-                            cellPane = new Paneeli(x - 10, y - 1, tietokoneenRuudukko.getRuudukko()[x - 10][y - 1], tietokoneenRuudukko);
+                            cellPane = new Paneeli(x - 10, y - 1, tietokoneenRuudukko);
+                            paneelitRuudukkoKone[x - 10][y - 1] = cellPane;
                         }
-                        Border border = new MatteBorder(1, 1, 1, 1, Color.darkGray);
+                        Border border = new MatteBorder(1, 1, 1, 1, Color.WHITE);
                         cellPane.setBorder(border);
                         add(cellPane, gbc);
 
@@ -156,7 +206,6 @@ public class Grafiikka {
         private Color defaultBackground;
         private int x;
         private int y;
-        private Ruutu ruutu;
         private Ruudukko ruudukko;
 
         /**
@@ -180,6 +229,7 @@ public class Grafiikka {
             } else {
                 setBackground(Color.BLUE);
             }
+
         }
 
         /**
@@ -187,14 +237,11 @@ public class Grafiikka {
          *
          * @param x x koordinaatti
          * @param y y koordinaatti
-         * @param ruutu siihen liittyvä ruutu
          * @param ruudukko ruudukko missä edellämainittu ruutu sijaitsee.
          */
-        public Paneeli(int x, int y, Ruutu ruutu, Ruudukko ruudukko) {
+        public Paneeli(int x, int y, Ruudukko ruudukko) {
             this.x = x;
             this.y = y;
-            this.ruutu = ruutu;
-            this.ruutu.asetaPaneeli(this);
             this.ruudukko = ruudukko;
             paivita();
             addMouseListener(new MouseAdapter() {
@@ -203,29 +250,13 @@ public class Grafiikka {
                 public void mouseEntered(MouseEvent e) {
                     setBackground(Color.DARK_GRAY);
                     defaultBackground = getBackground();
-                    if (m.isLaivanAsetusKaynnissa() == true && ruudukko.onkoOma() == true) {
-                        if (m.isAsetusSuunta() == true) {
-                            for (int i = 0; i < m.getLaivanKoko(); i++) {
-                                if (y + i < 8) {
-                                    varjaaRuudukotVaaka(i);
-                                }
-                            }
-                        } else {
-                            for (int j = 0; j < m.getLaivanKoko(); j++) {
-                                if (x + j < 8) {
-                                    varjaaRuudukotPysty(j);
-                                }
-                            }
-                        }
-                    }
+                    varjaaRuudukotLaivanAsetus();
                 }
 
                 @Override
                 public void mouseExited(MouseEvent e) {
                     setBackground(defaultBackground);
-                    paivita();
-                    omaRuudukko.paivitaGrafiikka();
-                    tietokoneenRuudukko.paivitaGrafiikka();
+                    paivitaGrafiikat();
                 }
 
                 @Override
@@ -243,7 +274,6 @@ public class Grafiikka {
                     if (e.getButton() == MouseEvent.BUTTON1) {
                         if (m.isLaivanAsetusKaynnissa() == true && ruudukko.onkoOma() == true) {
                             omaRuudukko.luoLaiva(x, y, m.isAsetusSuunta(), m.getLaivanKoko());
-                            paivita();
                         }
                         if (m.isTaisteluVaiheKaynnissa() == true && ruudukko.onkoOma() == false && ruudukko.getRuudukko()[y][x].onkoAmmuttu() == false) {
                             tietokoneenRuudukko.ammuLaivaa(y, x);
@@ -251,25 +281,50 @@ public class Grafiikka {
                         }
 
                         setBackground(Color.orange);
+
+                    }
+                    paivitaGrafiikat();
+                    varjaaRuudukotLaivanAsetus();
+                }
+
+                public void varjaaRuudukotLaivanAsetus() {
+                    if (m.isLaivanAsetusKaynnissa() == true && ruudukko.onkoOma() == true) {
+
+                        for (int i = 0; i < m.getLaivanKoko(); i++) {
+                            int z = 0;
+                            if (m.isAsetusSuunta()) {
+                                z = y;
+                            } else {
+                                z = x;
+                            }
+                            if (z + i < 8) {
+                                if (m.isAsetusSuunta()) {
+                                    varjaaRuudukotVaaka(i);
+                                } else {
+                                    varjaaRuudukotPysty(i);
+                                }
+                            }
+                        }
                     }
                 }
 
-                private void varjaaRuudukotVaaka(int i) {
+                public void varjaaRuudukotVaaka(int i) {
                     if (omaRuudukko.getRuudukko()[y + i][x].onkoRuudussaLaiva() == false) {
-                        omaRuudukko.getRuudukko()[x][y + i].palautaPaneeli().setBackground(Color.DARK_GRAY);
+                        paneelitRuudukkoOma[x][y + i].setBackground(Color.DARK_GRAY);
                     } else {
-                        omaRuudukko.getRuudukko()[x][y + i].palautaPaneeli().setBackground(Color.orange);
+                        paneelitRuudukkoOma[x][y + i].setBackground(Color.orange);
                     }
                 }
 
-                private void varjaaRuudukotPysty(int j) {
+                public void varjaaRuudukotPysty(int j) {
                     if (omaRuudukko.getRuudukko()[y][x + j].onkoRuudussaLaiva() == false) {
-                        omaRuudukko.getRuudukko()[x + j][y].palautaPaneeli().setBackground(Color.DARK_GRAY);
+                        paneelitRuudukkoOma[x + j][y].setBackground(Color.DARK_GRAY);
                     } else {
-                        omaRuudukko.getRuudukko()[x + j][y].palautaPaneeli().setBackground(Color.orange);
+                        paneelitRuudukkoOma[x + j][y].setBackground(Color.orange);
                     }
                 }
-            });
+            }
+            );
         }
 
         @Override

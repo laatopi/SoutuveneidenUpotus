@@ -16,7 +16,6 @@ public class Ruutu {
     private Boolean laiva;
     private Boolean ammuttu;
     private LaivaLaskuri laskuri;
-    private Paneeli paneeli;
 
     /**
      * Konstruktori joka luo uuden ruudun aloitustilassa eli ei ammuttuna ja
@@ -77,21 +76,6 @@ public class Ruutu {
         return this.laskuri;
     }
 
-    /**
-     * Asettaa ruudulle siihen kuuluvan grafiikan paneelin.
-     *
-     * @param paneeli asetettava paneeli olio.
-     */
-    public void asetaPaneeli(Paneeli paneeli) {
-        this.paneeli = paneeli;
-    }
-
-    /**
-     * Palauttaa ruudun oman paneeli olion.
-     *
-     * @return paneeli paneeli olio.
-     */
-    public Paneeli palautaPaneeli() {
-        return this.paneeli;
-    }
+    
+    
 }

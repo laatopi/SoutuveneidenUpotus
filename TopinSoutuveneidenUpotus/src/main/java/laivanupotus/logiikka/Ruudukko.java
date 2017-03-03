@@ -213,15 +213,7 @@ public class Ruudukko {
      * paivittaa jokaisen ruudun oman grafiiikan.
      *
      */
-    public void paivitaGrafiikka() {
-        for (int i = 0; i < 8; i++) {
-            for (int j = 0; j < 8; j++) {
-                if (ruudukko[i][j].palautaPaneeli() != null) {
-                    ruudukko[i][j].palautaPaneeli().paivita();
-                }
-            }
-        }
-    }
+    
 
     /**
      * Palauttaa ruudukon omistajan.
