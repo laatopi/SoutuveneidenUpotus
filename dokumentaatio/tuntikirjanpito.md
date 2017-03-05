@@ -11,3 +11,6 @@ Päivä | Tunnit | Kuvaus
 17.02.2017 | 5h | Javadocin luomista ja sen muokkaamista niin että checkstyle menee läpi, testien muokkaamista, sekvenssikaavion luomista.
 23.02.2017 | 6h | Koodin siivoamista, uusien luokkien tekemistä, uusia toiminnallisuuksia koodissa, public muuttujien muuttaminen privateksi, gettereitä ja settereitä lisää.
 24.02.2017 | 6h | Testien uudelleen tekeminen, koodin ulkoasun siivoaminen checkstyleä varten, uusi päivitetty luokkakaavio, ja rakennuskuvauksen tekeminen.
+02.03.2017 | 5h | Luokkien muokkaaminen, uudelleen pelaamisen ja sulkemisen mahdollisuus pelin päätyttyä.
+03.03.2017 | 5h | Viimeiset touchit projektiin, asioiden päivittämistä.
+05.03.2017 | 1h | Viimeiset dokumentaatiot lisätty.
